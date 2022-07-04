@@ -68,11 +68,12 @@
     background: transparent;
 }
 
-.loginForm p {
+.loginForm a {
     cursor: pointer;
     color: rgb(82, 117, 231);
 }
 
-.loginForm p:hover {
+.loginForm a:hover,
+.loginForm a:focus {
     text-decoration: underline;
 }

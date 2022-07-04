@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Layout from '../components/Layout'
@@ -7,7 +7,7 @@ import Image from 'next/image'
 
 const Home: NextPage = () => {
   const [productCount, setProductsCount] = useState(0);
-  useLayoutEffect(() => {
+  useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
     fetch("/api/products/count", {

@@ -10,6 +10,7 @@
     top: 0;
     align-items: center;
     padding: 0 25px;
+    border-bottom: 1px solid gray;
 }
 
 .navbarLogo {
@@ -71,10 +72,88 @@
 
 .footer {
     width: 100vw;
-    height: 100px;
-    background-color: rgb(188, 188, 188);
+    display: grid;
+    padding: 2rem 1rem;
+    align-content: center;
+    background-color: rgb(47, 47, 47);
 }
 
+.footerCopyrightContainer {
+    width: 100%;
+    margin-top: 2rem;
+    gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footerLine {
+    width: 80%;
+}
+
+.footerCopyright {
+    color: white;
+    font-size: 1.2rem;
+}
+
+.footerLogo {
+    width: 16rem;
+    margin-top: -6rem;
+    margin-bottom: -4rem;
+}
+
+.footerLogoContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.footerListsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.footerListsContainer ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footerListsContainer ul li {
+    color: rgb(181, 181, 181);
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.footerListsContainer ul li:hover {
+    color: white;
+}
+
+.footerListsContainer ul li::before {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    background-color: rgb(74, 139, 200);
+    height: 2px;
+    transition: .3s;
+}
+
+.footerListsContainer ul li:hover::before {
+    left: 0;
+    width: 100%;
+}
+
+.footerListsContainer h1 {
+    color: white;
+    font-size: 2.2rem;
+    font-weight: 800;
+}
 
 .container {
     display: flex;
@@ -82,4 +161,42 @@
     max-width: 100vw;
     min-height: 100vh;
     overflow: hidden;
+}
+
+@media only screen and (min-width: 600px) {
+
+    .footerListsContainer {
+        flex-direction: row;
+    }
+
+    .footerListsContainer ul {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    .footer {
+        flex-direction: row;
+    }
+
+    .footerListsContainer {
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+
+    .footerLogoContainer {
+        justify-content: start;
+        align-items: center;
+        padding-left: 2rem;
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+
+    .footerCopyrightContainer {
+        grid-row-start: 2;
+        grid-row-end: 3;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
 }
