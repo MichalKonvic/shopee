@@ -2,7 +2,6 @@ import type { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Layout from '../components/Layout'
 import Image from 'next/image'
 
 const Home: NextPage = () => {
@@ -27,7 +26,6 @@ const Home: NextPage = () => {
       <Head>
         <title>Shopee</title>
         <meta name="description" content="Shopee shop" />
-        <link rel="icon" href="/favicon.png" />
       </Head>
       <div className={styles.container}>
         <h1 className={styles.welcomeTitle}>Welcome on</h1>

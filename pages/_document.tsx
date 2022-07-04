@@ -6,7 +6,7 @@ export default function Document() {
             <Head>
                 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
                     rel="stylesheet" />
-
+                <link rel="icon" href="/favicon.png" />
             </Head>
             <body>
                 <Main />
