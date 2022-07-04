@@ -134,3 +134,7 @@ abbr,
 acronym {
   border: 0;
 }
+
+.invalid {
+  border: rgb(240, 84, 84) solid 2px !important;
+}

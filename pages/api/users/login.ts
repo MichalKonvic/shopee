@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from './../../../lib/dbConnect'
 import User from '../../../models/User'
-import { compare } from 'bcrypt'
+import { compare } from 'bcryptjs'
 import { generateAccessToken, generateRefreshToken } from '../../../lib/jwt'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;

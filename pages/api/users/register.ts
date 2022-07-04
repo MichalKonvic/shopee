@@ -1,8 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import dbConnect from './../../../lib/dbConnect'
 import User from '../../../models/User'
-import { hash } from 'bcrypt'
+import { hash } from 'bcryptjs'
 import { generateAccessToken, generateRefreshToken } from '../../../lib/jwt'
+const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+};
+    
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
     if (method !== 'POST') {
@@ -12,6 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { email, password } = req.body;
     if (!email || !password) {
         res.status(400).send("Invalid request");
+        return;
+    }
+    if (!validateEmail(email)) {
+        res.status(400).send("Invalid email");
         return;
     }
     await dbConnect();

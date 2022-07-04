@@ -77,3 +77,12 @@
 .loginForm a:focus {
     text-decoration: underline;
 }
+
+.loginForm p {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: rgb(240, 84, 84);
+    font-size: 1.1rem;
+    font-weight: 500;
+}
