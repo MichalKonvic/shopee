@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styles from '../styles/Login.module.css'
 import Head from 'next/head'
 import Link from 'next/link'
 import { sessionManager } from '../lib/storageManager'
+import { AuthContext } from '../contexts/AuthContext'
 import { useRouter } from 'next/router'
 const Login = () => {
     const [loginState, setLoginState] = useState("");
+    const { isLoading, isLoggedIn } = useContext(AuthContext);
     const router = useRouter();
     const validateEmail = (email) => {
         return String(email)
@@ -48,6 +50,15 @@ const Login = () => {
             setLoginState("ERROR");
         });
     }
+
+    useEffect(() => {
+        if (isLoading) return;
+        if (isLoggedIn) router.push("/");
+        return () => {
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoading, isLoggedIn])
+
     return (
         <>
             <Head>
