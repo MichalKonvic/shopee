@@ -2,11 +2,11 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import Layout from '../components/Layout'
 import { AuthContext } from '../contexts/AuthContext'
-import useAuth from '../lib/useAuth'
+import useAuth from '../hooks/useAuth'
 function MyApp({ Component, pageProps }: AppProps) {
-  const authData = useAuth();
+
   return (
-    <AuthContext.Provider value={authData}>
+    <AuthContext.Provider value={useAuth()}>
       <Layout>
         <Component {...pageProps} />
       </Layout>

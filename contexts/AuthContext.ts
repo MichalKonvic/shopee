@@ -3,6 +3,12 @@ export const AuthContext = createContext({
     isLoading: true,
     isLoggedIn: false,
     accessToken: "",
+    user: {
+        id: "",
+        email: "",
+        isAdmin: false
+    },
     renewAccess: () => { },
-    logout: () => {}
+    logout: () => { },
+    fetchUserData: () => {}
 });

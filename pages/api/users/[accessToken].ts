@@ -4,6 +4,11 @@ import dbConnect from './../../../lib/dbConnect'
 import User from '../../../models/User'
 import { isAccessTokenValid } from '../../../lib/jwt';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const { method } = req;
+    if (method != "GET") {
+        res.status(400).send("Invalid method");
+        return;
+    }
     const { accessToken } = req.query;
     const payload = isAccessTokenValid(accessToken as string);
     if (!payload) {
@@ -19,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return;
         }
         userSearch.id = userId
-        res.status(200).json(userSearch);
+        res.status(200).json({data:userSearch});
     } catch (error) {
         res.status(500).send("Database Error!");
     }

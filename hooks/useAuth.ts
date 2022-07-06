@@ -1,12 +1,52 @@
 import { useState,useEffect } from "react";
-import { sessionManager } from "./storageManager";
+import { sessionManager } from "../lib/storageManager";
+const INITIAL_USER = {
+    id: "",
+    email: "",
+    isAdmin: false
+}
+
 const useAuth = () => {
     const [isLoggedIn, setLogin] = useState(false);
     const [accessToken, setToken] = useState("");
     const [isLoading, setLoading] = useState(true);
+    const [user, setUser] = useState(INITIAL_USER);
+
+    function fetchUserData () {
+        fetch(`/api/users/${accessToken}`, {
+            method: "GET",
+        }).then(async response => {
+            switch (response.status) {
+                case 200:
+                    const dataJson = await response.json();
+                    if (!dataJson) throw new Error("No api response");
+                    const { data } = dataJson;
+                    setUser(data);
+                    if(isLoading) setLoading(false);
+                    break;
+                case 401:
+                    renewAccess();
+                    break;
+                case 404:
+                    logout();
+                    break;
+                case 500:
+                    throw new Error("Server error");
+                default:
+                    // TODO check for unexpected responses
+                    console.error("Unexpected api response status");
+                    throw new Error("Unhandled api response");
+            }
+        }).catch(_err => {
+            // TODO show error dialog
+            if(isLoading) setLoading(false);
+        });
+    }
+
     const logout = () => {
         setLogin(false);
         setToken("");
+        setUser(INITIAL_USER)
         sessionManager("SHOPEE", {});
         fetch("/api/users/logout", {
             "method": "GET"
@@ -39,8 +79,9 @@ const useAuth = () => {
     }, [accessToken])
     
     useEffect(() => {
+        // waits till user is logged in
         if (!isLoggedIn) return;
-        setLoading(false);
+        fetchUserData();
     },[isLoggedIn])
 
     useEffect(() => {
@@ -65,7 +106,7 @@ const useAuth = () => {
         }
     }, [])
     
-    return {isLoading,isLoggedIn,accessToken,renewAccess,logout};
+    return {isLoading,isLoggedIn,accessToken,user,renewAccess,logout,fetchUserData};
 }
 
 export default useAuth;
