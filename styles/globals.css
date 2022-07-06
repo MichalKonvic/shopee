@@ -138,3 +138,7 @@ acronym {
 .invalid {
   border: rgb(240, 84, 84) solid 2px !important;
 }
+
+.navbarFix {
+  margin-top: 80px;
+}

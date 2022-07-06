@@ -22,13 +22,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(404).send("Not Found");
             return;
         }
-        const { password: hashedPassword, isAdmin } = user;
+        const { password: hashedPassword, isAdmin, id } = user;
         if (!await compare(password, hashedPassword)) {
             res.status(401).send("Unauthorized");
             return;
         }
         const refreshToken = generateRefreshToken(email);
-        const accessToken = generateAccessToken(email, isAdmin);
+        const accessToken = generateAccessToken(email, isAdmin,id);
         const expirationDate = new Date();
         expirationDate.setMonth((new Date().getMonth() + 1));
         // FIXME TODO  add "Secure;" into response so token will be send only if server is https

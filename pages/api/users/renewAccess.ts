@@ -24,8 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(404).send("User not Found");
             return;
         }
-        const { isAdmin } = user;
-        const accessToken = generateAccessToken(email, isAdmin);
+        const { isAdmin, id } = user;
+        const accessToken = generateAccessToken(email, isAdmin,id);
         res.status(200).json({
             data: accessToken
         });

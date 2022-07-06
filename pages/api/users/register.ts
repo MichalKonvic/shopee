@@ -31,13 +31,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Creates user
     try {
         const hashedPassword = await hash(password, 10);
-        await User.create({
+        const newUser = await User.create({
             email: email,
             password: hashedPassword,
             isAdmin: false
         });
+        const { id } = newUser;
         const refreshToken = generateRefreshToken(email);
-        const accessToken = generateAccessToken(email, false);
+        const accessToken = generateAccessToken(email, false,id);
         const expirationDate = new Date();
         expirationDate.setMonth((new Date().getMonth() + 1));
         // FIXME TODO  add "Secure;" into response so token will be send only if server is https

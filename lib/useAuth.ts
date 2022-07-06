@@ -3,7 +3,7 @@ import { sessionManager } from "./storageManager";
 const useAuth = () => {
     const [isLoggedIn, setLogin] = useState(false);
     const [accessToken, setToken] = useState("");
-
+    const [isLoading, setLoading] = useState(true);
     const logout = () => {
         setLogin(false);
         setToken("");
@@ -38,6 +38,10 @@ const useAuth = () => {
         sessionManager("SHOPEE", { accessToken });
     }, [accessToken])
     
+    useEffect(() => {
+        if (!isLoggedIn) return;
+        setLoading(false);
+    },[isLoggedIn])
 
     useEffect(() => {
         const sessionData = sessionManager("SHOPEE");
@@ -61,7 +65,7 @@ const useAuth = () => {
         }
     }, [])
     
-    return [isLoggedIn,accessToken,renewAccess,logout];
+    return {isLoading,isLoggedIn,accessToken,renewAccess,logout};
 }
 
 export default useAuth;

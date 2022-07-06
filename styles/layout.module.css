@@ -3,8 +3,7 @@
     height: 80px;
     display: flex;
     justify-content: space-between;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
+    background-color: rgba(0, 0, 0, 1);
     position: fixed;
     z-index: 1000;
     top: 0;
@@ -21,7 +20,7 @@
     color: white;
     cursor: pointer;
     user-select: none;
-    display: flex;
+    display: none;
     justify-content: center;
     align-content: center;
     gap: .5rem;
@@ -33,7 +32,7 @@
 }
 
 .navbarList {
-    display: flex;
+    display: none;
     gap: 1rem;
     font-size: 1.2rem;
     font-weight: 600;
@@ -161,9 +160,169 @@
     max-width: 100vw;
     min-height: 100vh;
     overflow: hidden;
+    background-color: black;
+}
+
+.navbarBurger,
+.navbarBurgerActive {
+    font-size: 2rem;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    transition: transform .15s ease;
+}
+
+.navbarBurger::after,
+.navbarBurger::before,
+.navbarBurgerActive::after,
+.navbarBurgerActive::before {
+    position: absolute;
+    top: 50%;
+    left: 12%;
+    content: '';
+    width: 30px;
+    height: 2px;
+    background-color: white;
+    transition: transform .15s ease;
+}
+
+.navbarBurger::after {
+    top: calc(50% - 5px);
+}
+
+.navbarBurger::before {
+    top: calc(50% + 5px);
+}
+
+.navbarBurgerActive::before {
+    transform: rotate(45deg);
+    transition: transform .15s ease;
+}
+
+.navbarBurgerActive::after {
+    transform: rotate(-45deg);
+    transition: transform .15s ease;
+}
+
+.navbarMenuBar {
+    width: 100vw;
+    height: 100%;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 1);
+    position: fixed;
+    z-index: 999;
+    align-items: center;
+    padding: 0 25px;
+    color: white;
+    border-bottom: 1px solid gray;
+}
+
+.navbarMenuBarProfileContainer {
+    display: flex;
+    margin-top: 1rem;
+    width: 100%;
+    align-items: center;
+    gap: .5rem;
+}
+
+.navbarMenuBarProfileContainer div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .5rem;
+}
+
+.navbarMenuBarProfileContainer button {
+    background-color: transparent;
+    outline: none;
+    color: rgb(165, 165, 165);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.navbarMenuBarProfileContainer button:hover {
+    text-decoration: underline;
+}
+
+.navbarMenuBarProfileContainer span {
+    color: rgb(146, 146, 146);
+    width: 4rem;
+    height: 4rem;
+    font-size: 4rem;
+}
+
+.navbarLogoutButton {
+    width: 100%;
+    margin-top: .8rem;
+    font-size: 1.8rem;
+    padding: 1rem 2rem;
+    color: rgb(55, 102, 219);
+    background-color: transparent;
+    border: 1px solid rgb(55, 102, 219);
+    outline: none;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+.navbarLogoutButton:hover {
+    transition: .3s;
+    background-color: rgb(55, 102, 219);
+    color: white;
+}
+
+.divider {
+    width: 100%;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid gray;
+}
+
+.navbarMenuBarList {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.navbarMenuBarList li {
+    font-size: 1.2rem;
+    width: 100%;
+    padding: .8rem .3rem;
+    cursor: pointer;
+    border-bottom: 1px solid gray;
+}
+
+.navbarMenuBarList li:hover {
+    transition: .3s;
+    background-color: rgb(41, 41, 41);
 }
 
 @media only screen and (min-width: 600px) {
+
+    .navbarMenuBar {
+        display: none;
+    }
+
+    .navbarBurger,
+    .navbarBurgerActive {
+        display: none;
+    }
+
+    .navbarButtons,
+    .navbarList {
+        display: flex;
+    }
+
+    .navbar {
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+    }
+
+    .navbarBurger {
+        display: none;
+    }
 
     .footerListsContainer {
         flex-direction: row;
