@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useEffect, useContext, useState, useRef } from 'react'
 import styles from './../styles/layout.module.css'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,9 +8,17 @@ const Navbar = () => {
     const router = useRouter();
     const { isLoggedIn, user, logout } = useContext(AuthContext);
     const [isMenuOpen, openMenu] = useState(false);
+    const [isProfileOpen, toggleProfileMenu] = useState(false);
+    const profileMenubButtonRef = useRef(null);
+    const profileMenuRef = useRef(null);
+    useEffect(() => {
+        if (isLoggedIn) return;
+        if (isProfileOpen) toggleProfileMenu(false);
+    }, [isLoggedIn]);
     useEffect(() => {
         const handleRouteChange = () => {
             openMenu(false);
+            toggleProfileMenu(false);
         }
         router.events.on("routeChangeComplete", handleRouteChange,);
         return () => {
@@ -19,6 +27,24 @@ const Navbar = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+
+    const onClickOutside = () => {
+        toggleProfileMenu(false);
+    }
+
+    useEffect(() => {
+        if (isProfileOpen) {
+            const handleClickOutside = (event: any) => {
+                if (profileMenubButtonRef.current && !profileMenubButtonRef.current.contains(event.target) && profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
+                    onClickOutside && onClickOutside();
+                }
+            }
+            document.addEventListener('click', handleClickOutside, true);
+            return () => {
+                document.removeEventListener('click', handleClickOutside, true);
+            }
+        }
+    }, [onClickOutside]);
     const toggleCart = () => {
 
     }
@@ -52,10 +78,24 @@ const Navbar = () => {
                     {!isLoggedIn ? <Link href="/login">
                         <span className={'material-icons'}>login</span>
                     </Link> :
-                        <span onClick={() => logout()} className='material-icons'>logout</span>
+                        <span ref={profileMenubButtonRef} onClick={() => toggleProfileMenu(!isProfileOpen)} className='material-icons'>person</span>
                     }
                 </div>
             </div >
+            {
+                isProfileOpen && <div ref={profileMenuRef} className={styles.navbarProfileMenu}>
+                    <div className={styles.navbarMenuBarProfileContainer}>
+                        <span className='material-icons'>person</span>
+                        <div>
+                            <p>{user.email}</p>
+                            <Link href="/profile">
+                                <button>Show Profile</button>
+                            </Link>
+                        </div>
+                    </div>
+                    <button className={styles.navbarLogoutButton} onClick={() => logout()}>Logout</button>
+                </div>
+            }
             {
                 isMenuOpen && <div
                     className={styles.navbarMenuBar}>

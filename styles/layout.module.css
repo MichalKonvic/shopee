@@ -221,6 +221,21 @@
     border-bottom: 1px solid gray;
 }
 
+.navbarProfileMenu {
+    top: 80px;
+    right: 0;
+    flex-direction: column;
+    margin-top: 1rem;
+    margin-right: 1rem;
+    border-radius: 1rem;
+    padding: 0rem 1rem 1rem 1rem;
+    border: 1px solid gray;
+    position: fixed;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+}
+
 .navbarMenuBarProfileContainer {
     display: flex;
     margin-top: 1rem;
@@ -254,6 +269,10 @@
     width: 4rem;
     height: 4rem;
     font-size: 4rem;
+}
+
+.navbarMenuBarProfileContainer p {
+    color: white;
 }
 
 .navbarLogoutButton {
@@ -300,6 +319,9 @@
 }
 
 @media only screen and (min-width: 600px) {
+    .navbarProfileMenu {
+        display: flex;
+    }
 
     .navbarMenuBar {
         display: none;
