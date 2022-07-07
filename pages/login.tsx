@@ -7,7 +7,7 @@ import { AuthContext } from '../contexts/AuthContext'
 import { useRouter } from 'next/router'
 const Login = () => {
     const [loginState, setLoginState] = useState("");
-    const { isLoading, isLoggedIn } = useContext(AuthContext);
+    const { isLoading, isLoggedIn, checkLogin } = useContext(AuthContext);
     const router = useRouter();
     const validateEmail = (email) => {
         return String(email)
@@ -44,7 +44,7 @@ const Login = () => {
             sessionManager("SHOPEE", {
                 accessToken
             });
-            router.replace("/");
+            checkLogin();
         }).catch(_error => {
             console.log(_error);
             setLoginState("ERROR");
@@ -56,7 +56,7 @@ const Login = () => {
         if (isLoggedIn) router.push("/");
         return () => {
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoading, isLoggedIn])
 
     return (

@@ -10,5 +10,6 @@ export const AuthContext = createContext({
     },
     renewAccess: () => { },
     logout: () => { },
-    fetchUserData: () => {}
+    fetchUserData: () => { },
+    checkLogin: () => {}
 });

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 const AuthTest = () => {
-    const { isLoading, isLoggedIn, logout, renewAccess, user } = useContext(AuthContext);
+    const { isLoading, isLoggedIn, logout, renewAccess, user, fetchUserData, checkLogin } = useContext(AuthContext);
     return (
         <div className='navbarFix' style={{ color: "white" }}>
             {isLoading && "Loading..."}
@@ -9,7 +9,9 @@ const AuthTest = () => {
             <br />
             <button onClick={() => logout()}>Logout</button>
             <br />
-            <button onClick={() => renewAccess()}>Renew</button>
+            <button onClick={() => renewAccess()}>Renew Access</button>
+            <button onClick={() => fetchUserData()}>Fetch User</button>
+            <button onClick={() => checkLogin()}>Check login</button>
             {isLoading || <div>
                 <span>id:{user.id}</span>
                 <br />

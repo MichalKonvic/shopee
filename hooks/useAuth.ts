@@ -12,7 +12,10 @@ const useAuth = () => {
     const [isLoading, setLoading] = useState(true);
     const [user, setUser] = useState(INITIAL_USER);
 
-    function fetchUserData () {
+    function fetchUserData() {
+        if (!isLoggedIn) {
+            return;
+        }
         fetch(`/api/users/${accessToken}`, {
             method: "GET",
         }).then(async response => {
@@ -42,7 +45,7 @@ const useAuth = () => {
             if(isLoading) setLoading(false);
         });
     }
-
+    
     const logout = () => {
         setLogin(false);
         setToken("");
@@ -72,30 +75,86 @@ const useAuth = () => {
             return;
         });
     }
-    useEffect(() => {
-        if (!accessToken) return;
-        setLogin(true);
-        sessionManager("SHOPEE", { accessToken });
-    }, [accessToken])
-    
-    useEffect(() => {
-        // waits till user is logged in
-        if (!isLoggedIn) return;
-        fetchUserData();
-    },[isLoggedIn])
 
-    useEffect(() => {
+    const checkLogin = () => {
+        // Checks for appData in sessionStorage
         const sessionData = sessionManager("SHOPEE");
         if (!sessionData) {
+            // Tries to renewAccess using refreshToken
+            // Tries it because refreshToken cannot be accessed by client-side js
             renewAccess();
         } else {
+            // Application have data in sessionStorage
             const { accessToken: _accessToken } = sessionData;
+            // Checks for AccessToken
             if (!_accessToken) {
+                // accessToken not found
+                // Tries to renewAccess using refreshToken
+                // Tries it because refreshToken cannot be accessed by client-side js
                 renewAccess();
             } else {
                 setToken(_accessToken);
             }    
         }
+        if (isLoading) setLoading(false);
+    }
+
+    const checkUserData = () => {
+        // Checks for appData in sessionStorage
+        const sessionData = sessionManager("SHOPEE");
+        if (!sessionData) {
+            fetchUserData();
+            return;
+        }
+        // Application have data in sessionStorage
+        const { user } = sessionData;
+        if (!user) {
+            fetchUserData();
+            return;
+        }
+        const { id, email, isAdmin } = user;
+        if (!id || !email || typeof (isAdmin) !== "boolean") {
+            fetchUserData();
+            return;
+        }
+        setUser({
+            id, email, isAdmin
+        });
+    }
+    const generateSessionStorageData = () => {
+        const sessionStorageData = {
+            accessToken,
+            user
+        }
+        sessionManager("SHOPEE", sessionStorageData);
+    }
+
+    useEffect(() => {
+        if (!accessToken) return;
+        setLogin(true);
+        let lastSessionStorageData = sessionManager("SHOPEE");
+        if (!lastSessionStorageData) {
+            generateSessionStorageData();
+            return;
+        }
+        lastSessionStorageData["accessToken"] = accessToken;
+        sessionManager("SHOPEE", lastSessionStorageData);
+    }, [accessToken])
+
+    // Session User update
+    useEffect(() => {
+        if (user === INITIAL_USER) return;
+        let lastSessionStorageData = sessionManager("SHOPEE");
+        if (!lastSessionStorageData) {
+            generateSessionStorageData();
+            return;
+        }
+        lastSessionStorageData["user"] = user;
+        sessionManager("SHOPEE", lastSessionStorageData);
+    }, [user]);
+    
+    useEffect(() => {
+        if (!isLoggedIn) return;
         // Renews AccessToken every 5 minutes
         const renewAccessInterval = setInterval(() => {
             console.log("Restoring access...")
@@ -103,10 +162,20 @@ const useAuth = () => {
         }, 1000 * 60 * 5);
         return () => {
             clearInterval(renewAccessInterval);
-        }
+        }    
+    },[isLoggedIn]);
+    
+    useEffect(() => {
+        // waits till user is logged in
+        if (!isLoggedIn) return;
+        checkUserData()
+    },[isLoggedIn])
+
+    useEffect(() => {
+        checkLogin();
     }, [])
     
-    return {isLoading,isLoggedIn,accessToken,user,renewAccess,logout,fetchUserData};
+    return {isLoading,isLoggedIn,accessToken,user,renewAccess,logout,fetchUserData,checkLogin};
 }
 
 export default useAuth;

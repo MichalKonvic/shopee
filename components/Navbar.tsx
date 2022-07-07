@@ -6,7 +6,7 @@ import { AuthContext } from '../contexts/AuthContext'
 import { useRouter } from 'next/router'
 const Navbar = () => {
     const router = useRouter();
-    const { isLoggedIn, logout } = useContext(AuthContext);
+    const { isLoggedIn, user, logout } = useContext(AuthContext);
     const [isMenuOpen, openMenu] = useState(false);
     useEffect(() => {
         const handleRouteChange = () => {
@@ -66,7 +66,7 @@ const Navbar = () => {
                             <div className={styles.navbarMenuBarProfileContainer}>
                                 <span className='material-icons'>person</span>
                                 <div>
-                                    <p>email@domain.com</p>
+                                    <p>{user.email}</p>
                                     <Link href="/profile">
                                         <button>Show Profile</button>
                                     </Link>
