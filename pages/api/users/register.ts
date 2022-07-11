@@ -18,7 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(400).send("Invalid method");
         return;
     }
-    const { email, password } = req.body;
+    let { email, password }:{email:string,password:string} = req.body;
+    email = email.toLowerCase();
     if (!email || !password) {
         res.status(400).send("Invalid request");
         return;
