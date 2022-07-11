@@ -12,8 +12,15 @@ const useAuth = () => {
     const [isLoading, setLoading] = useState(true);
     const [user, setUser] = useState(INITIAL_USER);
 
+    /**
+     * Fetches user data from server using accessToken
+     * SHOULD BE CALLED AFTER accessToken load
+     */
     function fetchUserData() {
-        if (!isLoggedIn) {
+        if (!accessToken) {
+            // No accessToken
+            // logout()???
+            // TODO could make problems
             return;
         }
         fetch(`/api/users/${accessToken}`, {
@@ -25,7 +32,6 @@ const useAuth = () => {
                     if (!dataJson) throw new Error("No api response");
                     const { data } = dataJson;
                     setUser(data);
-                    if(isLoading) setLoading(false);
                     break;
                 case 401:
                     renewAccess();
@@ -41,13 +47,18 @@ const useAuth = () => {
                     throw new Error("Unhandled api response");
             }
         }).catch(_err => {
+            // User fetch failed
             // TODO show error dialog
-            if(isLoading) setLoading(false);
+            logout()
         });
     }
     
+    /**
+     * Logouts user and clears all states
+     */
     const logout = () => {
         setLogin(false);
+        if (isLoading) setLoading(false);
         setToken("");
         setUser(INITIAL_USER)
         sessionManager("SHOPEE", {});
@@ -56,103 +67,93 @@ const useAuth = () => {
         });
     }
 
+    /**
+     * Renews/gets accessToken
+     * Sets accessToken to state
+     */
     const renewAccess = () => {
-        fetch("api/users/renewAccess", {
+        fetch("/api/users/renewAccess", {
             credentials: "include",
             method: "GET"
         }).then(async response => {
             if (response.status !== 200) {
-                setLogin(false);
-                sessionManager("SHOPEE", {});
+                logout();
                 return;
             }
             const { data: _accessToken } = await response.json();
             setToken(_accessToken);
         }).catch(_err => {
-            setLogin(false);
-            sessionManager("SHOPEE", {});
+            logout();
             console.error("Cannot restore access!");
             return;
         });
     }
 
+    /**
+     * Checks browser storage for accessToken
+     * Or tries to get accessToken
+     */
     const checkLogin = () => {
+        setLoading(true);
         // Checks for appData in sessionStorage
         const sessionData = sessionManager("SHOPEE");
         if (!sessionData) {
             // Tries to renewAccess using refreshToken
-            // Tries it because refreshToken cannot be accessed by client-side js
             renewAccess();
-        } else {
-            // Application have data in sessionStorage
-            const { accessToken: _accessToken } = sessionData;
-            // Checks for AccessToken
-            if (!_accessToken) {
-                // accessToken not found
-                // Tries to renewAccess using refreshToken
-                // Tries it because refreshToken cannot be accessed by client-side js
-                renewAccess();
-            } else {
-                setToken(_accessToken);
-            }    
-        }
-        if (isLoading) setLoading(false);
-    }
-
-    const checkUserData = () => {
-        // Checks for appData in sessionStorage
-        const sessionData = sessionManager("SHOPEE");
-        if (!sessionData) {
-            fetchUserData();
             return;
         }
         // Application have data in sessionStorage
-        const { user } = sessionData;
-        if (!user) {
-            fetchUserData();
+        const { accessToken: _accessToken } = sessionData;
+        // Checks for AccessToken
+        if (!_accessToken) {
+            // accessToken not found in sessionStorage
+            // Tries to renewAccess using refreshToken
+            renewAccess();
             return;
-        }
-        const { id, email, isAdmin } = user;
-        if (!id || !email || typeof (isAdmin) !== "boolean") {
-            fetchUserData();
-            return;
-        }
-        setUser({
-            id, email, isAdmin
-        });
+        } else {
+            setToken(_accessToken);
+        }    
     }
-    const generateSessionStorageData = () => {
+
+
+    /**
+     * Saves data to sessionStorage
+     */
+    const saveSessionStorageData = () => {
         const sessionStorageData = {
-            accessToken,
-            user
-        }
+            accessToken        }
         sessionManager("SHOPEE", sessionStorageData);
     }
 
+    /**
+     * Saves accessToken to sessionStorage
+     * And loads userData
+     */
     useEffect(() => {
         if (!accessToken) return;
-        setLogin(true);
+        fetchUserData();
         let lastSessionStorageData = sessionManager("SHOPEE");
         if (!lastSessionStorageData) {
-            generateSessionStorageData();
+            saveSessionStorageData();
             return;
         }
         lastSessionStorageData["accessToken"] = accessToken;
         sessionManager("SHOPEE", lastSessionStorageData);
     }, [accessToken])
 
-    // Session User update
+    /**
+     *  Sets login to true
+     *  Sets loading to false
+     */
     useEffect(() => {
         if (user === INITIAL_USER) return;
-        let lastSessionStorageData = sessionManager("SHOPEE");
-        if (!lastSessionStorageData) {
-            generateSessionStorageData();
-            return;
-        }
-        lastSessionStorageData["user"] = user;
-        sessionManager("SHOPEE", lastSessionStorageData);
+        setLogin(true);
+        if(isLoading) setLoading(false);
     }, [user]);
     
+    /**
+     * Renews AccessToken to avoid its expiration
+     */
     useEffect(() => {
         if (!isLoggedIn) return;
         // Renews AccessToken every 5 minutes
@@ -164,13 +165,10 @@ const useAuth = () => {
             clearInterval(renewAccessInterval);
         }    
     },[isLoggedIn]);
-    
-    useEffect(() => {
-        // waits till user is logged in
-        if (!isLoggedIn) return;
-        checkUserData()
-    },[isLoggedIn])
 
+    /**
+     * On page load
+     */
     useEffect(() => {
         checkLogin();
     }, [])
