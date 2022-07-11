@@ -17,7 +17,10 @@ const PrivateRoute = ({ children, adminOnly = false, redirect = "/login" }: {
     if (adminOnly && !user.isAdmin && !isLoading) {
         router.push(redirect);
     }
-    if (isLoggedIn && !isLoading) return <>{children}</>
-    return <><PageLoader /></>
+    if (isLoggedIn && !isLoading) {
+        return <>{children}</>
+    } else {
+        return <><PageLoader /></>
+    }
 }
 export default PrivateRoute
