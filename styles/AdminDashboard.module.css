@@ -1,0 +1,55 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    background-color: rgb(15, 17, 25);
+}
+
+.container main {
+    margin-left: 80px;
+}
+
+.navbar {
+    position: fixed;
+    top: 80px;
+    width: 80px;
+    height: 100%;
+    background-color: rgb(25, 29, 43);
+}
+
+.navbar h3 {
+    color: rgb(98, 109, 147);
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: .5rem;
+    margin-left: .5rem;
+}
+
+.navbarList {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.navbarList li {
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    padding-top: 10px;
+    text-align: center;
+    background-color: rgb(25, 29, 43);
+    border-radius: 8px;
+}
+
+.navbarList li span {
+    color: white;
+    font-size: 40px;
+}
+
+.navbarList li:hover {
+    background-color: rgb(47, 54, 80);
+    transition: .3s;
+}
