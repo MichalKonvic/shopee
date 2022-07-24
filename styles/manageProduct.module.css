@@ -1,0 +1,99 @@
+.addContainer {
+    width: 100vw;
+    margin-bottom: 5rem;
+}
+
+.addContainer h1 {
+    color: white;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-left: 1rem;
+}
+
+.addForm {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    padding: 2rem;
+    gap: 1rem;
+    align-items: center;
+}
+
+.addForm label {
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.addForm input {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid white;
+    color: white;
+    outline: none;
+    font-size: 1.2rem;
+    width: 100%;
+}
+
+.descriptionMD {
+    min-width: 100%;
+    font-size: 1.2rem;
+    max-width: 100%;
+    min-height: 150px;
+}
+
+.addProductBTN:hover {
+    background-color: rgb(60, 60, 210);
+    transition: .3s;
+}
+
+.addProductBTN {
+    border: rgb(60, 60, 210) 1px solid !important;
+    border-radius: 8px;
+    font-size: 1.5rem !important;
+    padding: 1rem 0rem;
+}
+
+.imagesUpload input {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.imageUploadText span {
+    margin: auto;
+    color: white;
+    font-size: 2rem;
+}
+
+.uploadFilesHref {
+    color: rgb(147, 147, 227) !important;
+}
+
+
+.imageUploadText h2 {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: rgb(236, 236, 236);
+}
+
+.imageUploadText {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .2rem;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.imagesUpload {
+    position: relative;
+    cursor: pointer;
+    width: 20rem;
+    height: 20rem;
+    border: 2px dashed white;
+}

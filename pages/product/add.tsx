@@ -1,17 +1,19 @@
-import { useReducer, useRef, useState } from 'react'
+import { useContext, useReducer, useRef, useState } from 'react'
 import PrivateRoute from '../../components/PrivateRoute'
 import styles from '../../styles/manageProduct.module.css'
 import Head from 'next/head'
+import { AuthContext } from '../../contexts/AuthContext'
+import { useRouter } from 'next/router'
 const INITIAL_FORM_DATA = {
     name: "",
     description: "",
-    prize: 0,
+    prize: "0",
     mdDescription: ""
 }
 interface formI {
     name: string,
     description: string,
-    prize: number,
+    prize: string,
     mdDescription: string
 }
 enum FormActions {
@@ -22,13 +24,17 @@ enum FormActions {
     file = "Update_file"
 }
 const Add = () => {
+    // Next hooks
+    const router = useRouter();
+    // Contexts
+    const { accessToken } = useContext(AuthContext);
     // states
     const [fileName, setFile] = useState("");
     // refs
     const descriptionRef = useRef(null);
     const nameRef = useRef(null);
     const prizeRef = useRef(null);
-
+    const fileRef = useRef(null);
     const formReducer = (lastState: formI, { actionName, value, event }: { actionName: string, value: string, event?: any }) => {
         switch (actionName) {
             case FormActions.name:
@@ -50,7 +56,7 @@ const Add = () => {
                     prizeRef.current.value = lastState.prize;
                     return lastState;
                 }
-                if (value.length > 1 && value[0] == "0" && value[1] !== ".") {
+                if (value.length > 1 && value[0] == "0" && value[1] !== "." || value.includes(" ")) {
                     prizeRef.current.value = lastState.prize;
                     return lastState;
                 }
@@ -76,6 +82,41 @@ const Add = () => {
         }
     }
     const [formValues, changeFormValue] = useReducer(formReducer, INITIAL_FORM_DATA);
+
+    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!formValues.name) {
+            console.log("No name");
+            return;
+        }
+        if (!+formValues.prize) {
+            console.log("Invalid prize");
+        }
+        const formData = new FormData();
+        formData.append("name", formValues.name);
+        formData.append("description", formValues.description);
+        formData.append("prize", formValues.prize);
+        formData.append("img", fileRef.current.files[0]);
+        formData.append("MD_Description", formValues.mdDescription);
+
+        fetch("/api/products/add/", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            }
+        }).then(async (response) => {
+            if (response.status !== 201) {
+                throw response.json()
+            }
+            const { data } = await response.json();
+            router.replace(`/product/${data}`);
+        }).catch(err => {
+            // TODO handle error
+            console.error(err);
+        });
+    }
+
     return (
         <PrivateRoute adminOnly redirect='/'>
             <Head>
@@ -83,7 +124,7 @@ const Add = () => {
             </Head>
             <div className={styles.addContainer + ' navbarFix'}>
                 <h1>Add product</h1>
-                <form className={styles.addForm}>
+                <form onSubmit={handleFormSubmit} className={styles.addForm}>
                     <label htmlFor="productName">Product name</label>
                     <input
                         ref={nameRef}
@@ -101,8 +142,8 @@ const Add = () => {
                         ref={prizeRef}
                         onChange={
                             (e) => changeFormValue({ actionName: FormActions.prize, value: e.target.value })
-                        } type="text" id="productPrize" name="productPrize" placeholder='$ 100' />
-                    <label htmlFor="productImages">Images</label>
+                        } type="text" id="productPrize" name="productPrize" placeholder='$ 0' />
+                    <label htmlFor="productImages">Image</label>
                     <div className={styles.imagesUpload}>
                         <div className={styles.imageUploadText}>
                             {fileName ?
@@ -121,7 +162,7 @@ const Add = () => {
                                 </>
                             }
                         </div>
-                        <input onChange={(e) => changeFormValue({ actionName: FormActions.file, value: e.target.value, event: e })} type="file" name='productImages' id="productImages" accept="image/png, image/jpeg" />
+                        <input ref={fileRef} onChange={(e) => changeFormValue({ actionName: FormActions.file, value: e.target.value, event: e })} type="file" name='productImages' id="productImages" accept="image/png, image/jpeg" />
                     </div>
                     <label htmlFor="productDescriptionMD">Markdown Description</label>
                     <textarea
