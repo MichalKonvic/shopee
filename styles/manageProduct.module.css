@@ -97,3 +97,15 @@
     height: 20rem;
     border: 2px dashed white;
 }
+
+@media only screen and (min-width: 800px) {
+    .addContainer {
+        margin: auto;
+        margin-top: 150px;
+        max-width: 800px;
+        border: 1px gray solid;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        margin-bottom: 100px;
+    }
+}

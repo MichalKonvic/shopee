@@ -13,6 +13,7 @@ const Product = () => {
     });
     useEffect(() => {
         const { productId } = router.query;
+        if (!productId) return;
         const controller = new AbortController();
         const signal = controller.signal;
         fetch(`/api/products/${productId}`, {

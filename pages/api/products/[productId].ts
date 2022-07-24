@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
     }
     try {
-        const product:ProductI = (await Product.findOne({ id: productId }).select("-__v -id"))["_doc"];
+        const product:ProductI = (await Product.findById(productId).select("-__v -id"))["_doc"];
         if (!product) {
             res.status(404).send("Not found");
         }
