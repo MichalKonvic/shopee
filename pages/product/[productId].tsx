@@ -5,7 +5,7 @@ import styles from '../../styles/product.module.css'
 const Product = () => {
     const router = useRouter();
     const [product, setProduct] = useState({
-        img: null,
+        img: "",
         name: "",
         description: "",
         prize: 0,
@@ -30,30 +30,30 @@ const Product = () => {
         };
     }, [router.query])
 
-    // if (!product.name) return (
-    //     <div className={styles.productContainer + " navbarFix"}>
-    //         <h1 className={styles.productTitleLoading}></h1>
-    //         <div className={styles.productImageContainerLoading}>
-    //             <SpinnerLoader>
-    //                 <span className='material-icons'>image</span>
-    //             </SpinnerLoader>
-    //             <img src={product.img} alt={product.name} />
-    //         </div>
-    //         <span className={styles.productDescriptionLoading}>
-    //             <p>
-    //                 <div></div>
-    //                 <div></div>
-    //                 <div></div>
-    //                 <div></div>
-    //                 <div></div>
-    //             </p>
-    //         </span>
-    //     </div>
-    // )
+    if (!product.name) return (
+        <div className={styles.productContainer + " navbarFix"}>
+            <h1 className={styles.productTitleLoading}></h1>
+            <div className={styles.productImageContainerLoading}>
+                <SpinnerLoader>
+                    <span className='material-icons'>image</span>
+                </SpinnerLoader>
+            </div>
+            <span className={styles.productDescriptionLoading}>
+                <div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </span>
+        </div>
+    )
     return (
         <div className={styles.productContainer + " navbarFix"}>
             <h1 className={styles.productTitle}>Iphoe S Plus</h1>
             <div className={styles.productImageContainer}>
+                {/* eslint-disable-next-line @next/next/no-img-element*/}
                 <img src={product.img} alt={product.name} />
             </div>
             <span className={styles.productDescription}>
