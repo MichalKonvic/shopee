@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { readFileSync } from 'fs';
+import { readFileSync, unlinkSync } from 'fs';
 import type { UserI } from '../../../models/User'
 import formidable from 'formidable-serverless';
 import { isAccessTokenValid } from '../../../lib/jwt';
@@ -38,8 +38,12 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
             res.status(500).send("Server error");
             return;
         }
-        const { path, type } = files.img[0] ?? files.img;
-        const encoded_img = `data:${type};base64, ` + readFileSync(path, 'base64');
+        let img = undefined;
+        if (Object.keys(files).length !== 0) {
+            const { path, type } = files.img[0] ?? files.img;
+            img = `data:${type};base64, ` + readFileSync(path, 'base64');
+            unlinkSync(path);
+        }
         const { name, description, prize, MD_Description }: { [propName: string]: string } = fields;
         if (!name || !+prize) {
             res.status(400).send("Missing parameter");
@@ -51,7 +55,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
                 description,
                 prize:+prize,
                 MD_Description,
-                img: encoded_img,
+                img,
                 inStock: 0
             });
             const { id } = newProduct;
@@ -60,6 +64,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
             });
             return;
         } catch (error) {
+            console.error(error)
             res.status(500).send("Database Error");
             return;
         }
