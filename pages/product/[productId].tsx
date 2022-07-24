@@ -51,7 +51,7 @@ const Product = () => {
     )
     return (
         <div className={styles.productContainer + " navbarFix"}>
-            <h1 className={styles.productTitle}>Iphoe S Plus</h1>
+            <h1 className={styles.productTitle}>{product.name}</h1>
             <div className={styles.productImageContainer}>
                 {/* eslint-disable-next-line @next/next/no-img-element*/}
                 <img src={product.img} alt={product.name} />
@@ -63,9 +63,12 @@ const Product = () => {
             </span>
             <div className={styles.prizeBuyContainer}>
                 <div className={styles.prizeContainer}>
-                    <span>${product.prize}</span>
+                    {product.inStock == 0 ? <span className={styles.prizeOutOfStock}>Out of Stock</span> :
+                        <span>${product.prize}</span>}
                 </div>
-                <button>Buy now</button>
+                {product.inStock == 0 ? <button>Request</button>
+                    :
+                    <button>Buy now</button>}
             </div>
         </div>
     )

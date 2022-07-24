@@ -1,8 +1,8 @@
 import { useContext, useReducer, useRef, useState } from 'react'
-import PrivateRoute from '../../components/PrivateRoute'
+import PrivateRoute from '../../../components/PrivateRoute'
 import styles from '../../styles/manageProduct.module.css'
 import Head from 'next/head'
-import { AuthContext } from '../../contexts/AuthContext'
+import { AuthContext } from '../../../contexts/AuthContext'
 import { useRouter } from 'next/router'
 const INITIAL_FORM_DATA = {
     name: "",
