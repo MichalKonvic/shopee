@@ -3,14 +3,15 @@ import type { AppProps } from 'next/app'
 import Layout from '../components/Layout'
 import { AuthContext } from '../contexts/AuthContext'
 import useAuth from '../hooks/useAuth'
-import MessageModal from '../components/MessageModal'
+import MessageModalProvider from '../components/MessageModalProvider'
 function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <AuthContext.Provider value={useAuth()}>
       <Layout>
-        <MessageModal />
-        <Component {...pageProps} />
+        <MessageModalProvider>
+          <Component {...pageProps} />
+        </MessageModalProvider>
       </Layout>
     </AuthContext.Provider>
   )

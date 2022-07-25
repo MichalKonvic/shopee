@@ -8,6 +8,6 @@ interface MessageI {
 const messageQueue: MessageI[] = [];
 export const ModalContext = createContext({
     messageQueue,
-    setQueue: (_data:MessageI[])=>{}
+    addMessage: (_data:MessageI)=>{}
 })
 export type {MessageI};

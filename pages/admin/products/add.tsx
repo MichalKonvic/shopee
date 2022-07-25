@@ -4,6 +4,7 @@ import styles from '../../styles/manageProduct.module.css'
 import Head from 'next/head'
 import { AuthContext } from '../../../contexts/AuthContext'
 import { useRouter } from 'next/router'
+import { ModalContext } from '../../../contexts/ModalContext'
 const INITIAL_FORM_DATA = {
     name: "",
     description: "",
@@ -28,6 +29,7 @@ const Add = () => {
     const router = useRouter();
     // Contexts
     const { accessToken } = useContext(AuthContext);
+    const { addMessage } = useContext(ModalContext);
     // states
     const [fileName, setFile] = useState("");
     // refs
@@ -112,7 +114,12 @@ const Add = () => {
             const { data } = await response.json();
             router.replace(`/product/${data}`);
         }).catch(err => {
-            // TODO handle error
+            addMessage({
+                title: "Error occured",
+                message: "Cannot save product in database.",
+                hideAfter: 8 * 1000,
+                type: "ERR"
+            })
             console.error(err);
         });
     }

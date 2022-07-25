@@ -1,9 +1,11 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import SpinnerLoader from '../../components/SpinnerLoader';
+import { ModalContext } from '../../contexts/ModalContext';
 import styles from '../../styles/product.module.css'
 const Product = () => {
     const router = useRouter();
+    const { messageQueue, addMessage } = useContext(ModalContext);
     const [product, setProduct] = useState({
         img: "",
         name: "",
@@ -20,10 +22,18 @@ const Product = () => {
         fetch(`/api/products/${productId}`, {
             "method": "GET",
             signal
-        }).then(res => res.json()).then(jsonRes => {
+        }).then(async (res) => {
+            if (res.status !== 200) throw new Error("Product not loaded");
+            return res.json()
+        }).then(jsonRes => {
             setProduct(jsonRes);
         }).catch(_err => {
-            // TODO call error message component
+            addMessage({
+                title: "Error",
+                message: "Product was not created",
+                type: "ERR",
+                hideAfter: 5 * 1000
+            });
         })
         return () => {
             controller.abort();

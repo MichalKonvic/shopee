@@ -3,9 +3,12 @@ import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Image from 'next/image'
+import { useContext } from 'react'
+import { ModalContext } from '../contexts/ModalContext'
 
 const Home: NextPage = () => {
   const [productCount, setProductsCount] = useState(0);
+  const { addMessage } = useContext(ModalContext);
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
