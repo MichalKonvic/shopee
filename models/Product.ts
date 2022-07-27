@@ -5,7 +5,6 @@ interface ProductI {
     description?: string;
     prize?: number;
     img?: string;
-    MD_Description?: string;
     inStock?: number;
     [propName: string]: any;
 }
@@ -26,9 +25,6 @@ const ProductSchema = new mongoose.Schema({
         min:[0, 'Negative prize is not allowed']
     },
     img: {
-        type: String
-    },
-    MD_Description: {
         type: String
     },
     inStock: {

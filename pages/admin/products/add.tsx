@@ -1,6 +1,6 @@
 import { useContext, useReducer, useRef, useState } from 'react'
 import PrivateRoute from '../../../components/PrivateRoute'
-import styles from '../../styles/manageProduct.module.css'
+import styles from '../../../styles/manageProduct.module.css'
 import Head from 'next/head'
 import { AuthContext } from '../../../contexts/AuthContext'
 import { useRouter } from 'next/router'
@@ -9,20 +9,20 @@ const INITIAL_FORM_DATA = {
     name: "",
     description: "",
     prize: "0",
-    mdDescription: ""
+    inStock: "0"
 }
 interface formI {
     name: string,
     description: string,
     prize: string,
-    mdDescription: string
+    inStock: string
 }
 enum FormActions {
     name = "Update_Name",
     description = "Update_Description",
     prize = "Update_Prize",
-    mdDescription = "Update_MD_Description",
-    file = "Update_file"
+    file = "Update_file",
+    stock = "Update_stock"
 }
 const Add = () => {
     // Next hooks
@@ -37,6 +37,7 @@ const Add = () => {
     const nameRef = useRef(null);
     const prizeRef = useRef(null);
     const fileRef = useRef(null);
+    const quantityRef = useRef(null);
     const formReducer = (lastState: formI, { actionName, value, event }: { actionName: string, value: string, event?: any }) => {
         switch (actionName) {
             case FormActions.name:
@@ -64,9 +65,6 @@ const Add = () => {
                 }
                 lastState.prize = value;
                 return lastState;
-            case FormActions.mdDescription:
-                lastState.mdDescription = value;
-                return lastState;
             case FormActions.file:
                 if (value.split("\\").length === 0) {
                     return lastState;
@@ -78,6 +76,18 @@ const Add = () => {
                 }
                 event.target.value = null;
                 setFile("");
+                return lastState;
+
+            case FormActions.stock:
+                if (isNaN(value)) {
+                    quantityRef.current.value = lastState.inStock;
+                    return lastState;
+                }
+                if (value.length > 1 && value[0] == "0" && value[1] !== "." || value.includes(" ")) {
+                    quantityRef.current.value = lastState.inStock;
+                    return lastState;
+                }
+                lastState.inStock = value;
                 return lastState;
             default:
                 throw new Error("Unexpected action name");
@@ -99,8 +109,7 @@ const Add = () => {
         formData.append("description", formValues.description);
         formData.append("prize", formValues.prize);
         formData.append("img", fileRef.current.files[0]);
-        formData.append("MD_Description", formValues.mdDescription);
-
+        formData.append("inStock", formValues.inStock);
         fetch("/api/products/add/", {
             method: 'POST',
             body: formData,
@@ -171,11 +180,11 @@ const Add = () => {
                         </div>
                         <input ref={fileRef} onChange={(e) => changeFormValue({ actionName: FormActions.file, value: e.target.value, event: e })} type="file" name='productImages' id="productImages" accept="image/png, image/jpeg" />
                     </div>
-                    <label htmlFor="productDescriptionMD">Markdown Description</label>
-                    <textarea
+                    <label htmlFor="productQuantity">Quantity</label>
+                    <input ref={quantityRef}
                         onChange={
-                            (e) => changeFormValue({ actionName: FormActions.mdDescription, value: e.target.value })
-                        } name="productDescriptionMD" id="productDescriptionMD" className={styles.descriptionMD}></textarea>
+                            (e) => changeFormValue({ actionName: FormActions.stock, value: e.target.value })
+                        } type="text" name="productQuantity" id="productQuantity" placeholder='0' />
                     <input className={styles.addProductBTN} type="submit" value="Add Product" id='productSubmit' />
                 </form>
             </div>

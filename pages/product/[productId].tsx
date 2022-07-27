@@ -13,7 +13,6 @@ const Product = () => {
         name: "",
         description: "",
         prize: 0,
-        MD_Description: "",
         inStock: 0
     });
     useEffect(() => {

@@ -44,7 +44,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
             img = `data:${type};base64, ` + readFileSync(path, 'base64');
             unlinkSync(path);
         }
-        const { name, description, prize, MD_Description }: { [propName: string]: string } = fields;
+        const { name, description, prize, inStock }: { [propName: string]: string } = fields;
         if (!name || !+prize) {
             res.status(400).send("Missing parameter");
             return;
@@ -54,9 +54,8 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
                 name,
                 description,
                 prize:+prize,
-                MD_Description,
                 img,
-                inStock: 0
+                inStock
             });
             const { id } = newProduct;
             res.status(201).json({
