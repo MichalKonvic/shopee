@@ -9,6 +9,23 @@
     margin-bottom: 100px;
 }
 
+.editButton {
+    background-color: black;
+    color: white;
+    outline: none;
+    border: rgb(74, 74, 195) 2px solid;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.5rem;
+    height: 2.5rem;
+    border-radius: 8px;
+    transition: .3s;
+}
+
+.editButton:hover {
+    box-shadow: rgba(49, 104, 213, 0.56) 0px 22px 70px 4px;
+}
+
 .productTitle {
     color: rgb(255, 255, 255);
     font-size: 2rem;

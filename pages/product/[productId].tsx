@@ -3,8 +3,10 @@ import React, { useEffect, useState, useContext } from 'react'
 import SpinnerLoader from '../../components/SpinnerLoader';
 import { ModalContext } from '../../contexts/ModalContext';
 import styles from '../../styles/product.module.css'
+import { AuthContext } from '../../contexts/AuthContext';
 const Product = () => {
     const router = useRouter();
+    const { user } = useContext(AuthContext);
     const { messageQueue, addMessage } = useContext(ModalContext);
     const [product, setProduct] = useState({
         img: "",
@@ -62,6 +64,7 @@ const Product = () => {
     return (
         <div className={styles.productContainer + " navbarFix"}>
             <h1 className={styles.productTitle}>{product.name}</h1>
+            {user.isAdmin && <button className={styles.editButton}>Edit Product</button>}
             <div className={styles.productImageContainer}>
                 {/* eslint-disable-next-line @next/next/no-img-element*/}
                 <img src={product.img} alt={product.name} />
