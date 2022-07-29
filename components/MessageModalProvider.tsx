@@ -11,8 +11,11 @@ const MessageModalProvider = ({ children }) => {
     const modalRef = useRef(null);
 
     const addMessage = (message: MessageI) => {
-        let _messageQueue: MessageI[] = [...messageQueue];
-        _messageQueue.push(message);
+        let _messageQueue: MessageI[] = [...messageQueue, message];
+        setQueue(_messageQueue);
+    }
+    const addMessages = (messages: MessageI[]) => {
+        let _messageQueue: MessageI[] = [...messageQueue, ...messages];
         setQueue(_messageQueue);
     }
 
@@ -79,7 +82,7 @@ const MessageModalProvider = ({ children }) => {
     }, [activeMessage])
 
     return (
-        <ModalContext.Provider value={{ messageQueue, addMessage }}>
+        <ModalContext.Provider value={{ messageQueue, addMessage, addMessages }}>
             {activeMessage && <div ref={modalRef} className={styles.modalContainer} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)}>
                 <div className={styles.modal}>
                     <div className={styles.modalHeader}>
