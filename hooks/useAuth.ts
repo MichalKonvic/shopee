@@ -1,5 +1,4 @@
 import { useState,useEffect } from "react";
-import { sessionManager } from "../lib/storageManager";
 const INITIAL_USER = {
     id: "",
     email: "",
@@ -61,7 +60,6 @@ const useAuth = () => {
         if (isLoading) setLoading(false);
         setToken("");
         setUser(INITIAL_USER)
-        sessionManager("SHOPEE", {});
         fetch("/api/users/logout", {
             "method": "GET"
         });
@@ -95,34 +93,11 @@ const useAuth = () => {
      */
     const checkLogin = () => {
         setLoading(true);
-        // Checks for appData in sessionStorage
-        const sessionData = sessionManager("SHOPEE");
-        if (!sessionData) {
-            // Tries to renewAccess using refreshToken
-            renewAccess();
-            return;
-        }
-        // Application have data in sessionStorage
-        const { accessToken: _accessToken } = sessionData;
-        // Checks for AccessToken
-        if (!_accessToken) {
-            // accessToken not found in sessionStorage
-            // Tries to renewAccess using refreshToken
-            renewAccess();
-            return;
-        } else {
-            setToken(_accessToken);
-        }    
-    }
-
-
-    /**
-     * Saves data to sessionStorage
-     */
-    const saveSessionStorageData = () => {
-        const sessionStorageData = {
-            accessToken        }
-        sessionManager("SHOPEE", sessionStorageData);
+        setLogin(false);
+        setToken("")
+        setUser(INITIAL_USER)
+        // Tries to renewAccess using refreshToken
+        renewAccess();
     }
 
     /**
@@ -132,13 +107,6 @@ const useAuth = () => {
     useEffect(() => {
         if (!accessToken) return;
         fetchUserData();
-        let lastSessionStorageData = sessionManager("SHOPEE");
-        if (!lastSessionStorageData) {
-            saveSessionStorageData();
-            return;
-        }
-        lastSessionStorageData["accessToken"] = accessToken;
-        sessionManager("SHOPEE", lastSessionStorageData);
     }, [accessToken])
 
     /**
