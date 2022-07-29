@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { ModalContext } from '../contexts/ModalContext';
+import { useLocalStorage } from '../hooks/useStorage';
 const ComponentTest = () => {
     const { isLoading, isLoggedIn, logout, renewAccess, user, fetchUserData, checkLogin } = useContext(AuthContext);
     const { addMessages, messageQueue } = useContext(ModalContext);
     const [localQueue, setLocalQueue] = useState([]);
+    const { storageData, setData, loadLocalData } = useLocalStorage();
     const addLocalMessage = (data) => {
         let newQueue = [...localQueue, data];
         setLocalQueue(newQueue);
@@ -65,6 +67,13 @@ const ComponentTest = () => {
                 {localQueue.length.toString()}
                 <h2>Queue:</h2>
                 {messageQueue.length.toString()}
+            </div>
+            <div className='navbarFix' style={{ color: "white", border: "1px solid white", padding: "1rem" }}>
+                <h1>Local storage:</h1>
+                <button onClick={() => setData({ test: "test" })}>Set Storage</button>
+                <button onClick={loadLocalData}>Load Storage</button>
+                <br />
+                {JSON.stringify(storageData)}
             </div>
         </>
     )
