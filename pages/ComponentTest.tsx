@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { ModalContext } from '../contexts/ModalContext';
-import { useLocalStorage } from '../hooks/useStorage';
+import ShoppingCartContext from '../contexts/ShoppingCartContext';
 const ComponentTest = () => {
+    const { products } = useContext(ShoppingCartContext);
     const { isLoading, isLoggedIn, logout, renewAccess, user, fetchUserData, checkLogin } = useContext(AuthContext);
     const { addMessages, messageQueue } = useContext(ModalContext);
     const [localQueue, setLocalQueue] = useState([]);
-    const { storageData, setData, loadLocalData } = useLocalStorage();
     const addLocalMessage = (data) => {
         let newQueue = [...localQueue, data];
         setLocalQueue(newQueue);
@@ -69,11 +69,15 @@ const ComponentTest = () => {
                 {messageQueue.length.toString()}
             </div>
             <div className='navbarFix' style={{ color: "white", border: "1px solid white", padding: "1rem" }}>
-                <h1>Local storage:</h1>
-                <button onClick={() => setData({ test: "test" })}>Set Storage</button>
-                <button onClick={loadLocalData}>Load Storage</button>
-                <br />
-                {JSON.stringify(storageData)}
+                <h1>ShoppingCart:</h1>
+                {products.items.map(prod =>
+                    <div key={prod.id} style={{ border: "1px solid red" }}>
+                        <p>Id: {prod.id}</p>
+                        <p>Name: {prod.title}</p>
+                        <p>Prize: {prod.prize}</p>
+                        <p>Quantity: {prod.quantity}</p>
+                    </div>
+                )}
             </div>
         </>
     )

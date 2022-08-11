@@ -4,15 +4,19 @@ import Layout from '../components/Layout'
 import { AuthContext } from '../contexts/AuthContext'
 import useAuth from '../hooks/useAuth'
 import MessageModalProvider from '../components/MessageModalProvider'
+import ShoppingCartContext from '../contexts/ShoppingCartContext'
+import useShopping from '../hooks/useShopping'
 function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <AuthContext.Provider value={useAuth()}>
-      <Layout>
-        <MessageModalProvider>
-          <Component {...pageProps} />
-        </MessageModalProvider>
-      </Layout>
+      <ShoppingCartContext.Provider value={useShopping()}>
+        <Layout>
+          <MessageModalProvider>
+            <Component {...pageProps} />
+          </MessageModalProvider>
+        </Layout>
+      </ShoppingCartContext.Provider>
     </AuthContext.Provider>
   )
 }

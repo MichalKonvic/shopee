@@ -4,11 +4,14 @@ import SpinnerLoader from '../../components/SpinnerLoader';
 import { ModalContext } from '../../contexts/ModalContext';
 import styles from '../../styles/product.module.css'
 import { AuthContext } from '../../contexts/AuthContext';
+import ShoppingCartContext from '../../contexts/ShoppingCartContext';
 const Product = () => {
     const router = useRouter();
     const { user } = useContext(AuthContext);
+    const { addProduct } = useContext(ShoppingCartContext);
     const { messageQueue, addMessage } = useContext(ModalContext);
     const [product, setProduct] = useState({
+        id: "",
         img: "",
         name: "",
         description: "",
@@ -26,8 +29,8 @@ const Product = () => {
         }).then(async (res) => {
             if (res.status !== 200) throw new Error("Product not loaded");
             return res.json()
-        }).then(jsonRes => {
-            setProduct(jsonRes);
+        }).then(({ description, prize, inStock, name, img, _id: id }) => {
+            setProduct({ description, prize, inStock, name, img, id });
         }).catch(_err => {
             addMessage({
                 title: "Error",
@@ -40,6 +43,24 @@ const Product = () => {
             controller.abort();
         };
     }, [router.query])
+
+    const handleProductBuy = () => {
+        if (product.inStock < 0) {
+            addMessage({
+                hideAfter: 2500,
+                title: "Out of stock",
+                message: "Product is out of stock",
+                type: "WARN"
+            })
+            return;
+        }
+        addProduct({
+            id: product.id,
+            prize: product.prize,
+            title: product.name,
+            quantity: 1
+        });
+    }
 
     if (!product.name) return (
         <div className={styles.productContainer + " navbarFix"}>
@@ -80,7 +101,7 @@ const Product = () => {
                 </div>
                 {product.inStock == 0 ? <button>Request</button>
                     :
-                    <button>Buy now</button>}
+                    <button onClick={handleProductBuy}>Buy now</button>}
             </div>
         </div>
     )
