@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import styles from '../styles/Login.module.css'
 import Head from 'next/head'
 import Link from 'next/link'
-import { sessionManager } from '../lib/storageManager'
 import { AuthContext } from '../contexts/AuthContext'
 import { useRouter } from 'next/router'
 const Login = () => {
@@ -40,10 +39,6 @@ const Login = () => {
                 setLoginState("invalid-inputs");
                 return;
             }
-            const { data: accessToken } = await response.json();
-            sessionManager("SHOPEE", {
-                accessToken
-            });
             checkLogin();
         }).catch(_error => {
             console.log(_error);
