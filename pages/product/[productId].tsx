@@ -8,8 +8,8 @@ import ShoppingCartContext from '../../contexts/ShoppingCartContext';
 const Product = () => {
     const router = useRouter();
     const { user } = useContext(AuthContext);
-    const { addProduct } = useContext(ShoppingCartContext);
-    const { messageQueue, addMessage } = useContext(ModalContext);
+    const { addProduct, products } = useContext(ShoppingCartContext);
+    const { addMessage } = useContext(ModalContext);
     const [product, setProduct] = useState({
         id: "",
         img: "",
@@ -34,7 +34,7 @@ const Product = () => {
         }).catch(_err => {
             addMessage({
                 title: "Error",
-                message: "Product was not created",
+                message: "Cannot load product",
                 type: "ERR",
                 hideAfter: 5 * 1000
             });
@@ -52,6 +52,21 @@ const Product = () => {
                 message: "Product is out of stock",
                 type: "WARN"
             })
+            return;
+        }
+        // Checks if product is already in shoppingCart ...
+        // ... and if quantity doesnt overcome inStock
+        if (products.items.some(({ id, quantity }) => {
+            if (id !== product.id) return false;
+            if (quantity + 1 > product.inStock) return true;
+        })
+        ) {
+            addMessage({
+                hideAfter: 2500,
+                message: `We have only ${product.inStock} in stock`,
+                title: "Out of stock",
+                type: "WARN"
+            });
             return;
         }
         addProduct({
