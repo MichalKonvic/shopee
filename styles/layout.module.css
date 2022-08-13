@@ -129,8 +129,40 @@
     display: none;
     justify-content: center;
     align-content: center;
-    gap: .5rem;
+    gap: 1rem;
     margin-right: 10px;
+}
+
+.navbarButtons span {
+    font-size: 2rem;
+}
+
+.navbarCart {
+    position: relative;
+}
+
+.navbarCartContainer {
+    position: relative;
+}
+
+.navbarCart {
+    font-size: 2rem;
+}
+
+.navbarCartContainer p {
+    position: absolute;
+    top: -.75rem;
+    right: -.75rem;
+    color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .8rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background-color: rgb(230, 49, 49);
+    color: white;
 }
 
 .navbarCart:hover {

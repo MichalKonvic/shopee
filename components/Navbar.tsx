@@ -4,8 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { AuthContext } from '../contexts/AuthContext'
 import { useRouter } from 'next/router'
+import ShoppingCartContext from '../contexts/ShoppingCartContext'
 const Navbar = () => {
     const router = useRouter();
+    const { products } = useContext(ShoppingCartContext);
     const { isLoggedIn, user, logout } = useContext(AuthContext);
     const [isMenuOpen, openMenu] = useState(false);
     const [isProfileOpen, toggleProfileMenu] = useState(false);
@@ -74,7 +76,10 @@ const Navbar = () => {
                     </li>
                 </ul>
                 <div className={styles.navbarButtons}>
-                    <span className={styles.navbarCart + ' material-icons'} onClick={toggleCart}>shopping_cart</span>
+                    <div className={styles.navbarCartContainer}>
+                        <span className={styles.navbarCart + ' material-icons'} data-count={products.items.length} onClick={toggleCart}>shopping_cart</span>
+                        <p>{products.items.length > 99 ? "99+" : products.items.length}</p>
+                    </div>
                     {!isLoggedIn ? <Link href="/login">
                         <span className={'material-icons'}>login</span>
                     </Link> :
