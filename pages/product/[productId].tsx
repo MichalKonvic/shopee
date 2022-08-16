@@ -32,12 +32,14 @@ const Product = () => {
         }).then(({ description, prize, inStock, name, img, _id: id }) => {
             setProduct({ description, prize, inStock, name, img, id });
         }).catch(_err => {
-            addMessage({
-                title: "Error",
-                message: "Cannot load product",
-                type: "ERR",
-                hideAfter: 5 * 1000
-            });
+            if (_err.name !== "AbortError") {
+                addMessage({
+                    title: "Error",
+                    message: "Cannot load product",
+                    type: "ERR",
+                    hideAfter: 5 * 1000
+                });
+            }
         })
         return () => {
             controller.abort();
