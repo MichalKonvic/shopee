@@ -50,6 +50,9 @@ const Navbar = () => {
     const toggleCart = () => {
 
     }
+    const removeProductFromCart = (prodId: string) => {
+        // TODO handle product remove
+    }
     return (
         <>
             <div className={styles.navbar}>
@@ -77,7 +80,9 @@ const Navbar = () => {
                 </ul>
                 <div className={styles.navbarButtons}>
                     <div className={styles.navbarCartContainer}>
-                        <span className={styles.navbarCart + ' material-icons'} data-count={products.items.length} onClick={toggleCart}>shopping_cart</span>
+                        <Link href="/Checkout">
+                            <span className={styles.navbarCart + ' material-icons'} data-count={products.items.length}>shopping_cart</span>
+                        </Link>
                         <p>{products.items.length > 99 ? "99+" : products.items.length}</p>
                     </div>
                     {!isLoggedIn ? <Link href="/login">
@@ -138,6 +143,33 @@ const Navbar = () => {
                             </li>
                         </Link>
                     </ul>
+                    {products.items.length > 0 && <div className={styles.navBarMobileCartContainer}>
+                        <h1 className={styles.navBarCartTitle}>Cart</h1>
+                        <ul className={styles.navbarMobileCartList}>
+                            {products.items.map((product) => {
+                                return (<li key={product.id}>
+                                    <div className={styles.navbarCartProductHeader}>
+                                        <p>{product.quantity}x</p>
+                                        <Link href={`/product/${product.id}`}>
+                                            <h1>{product.title}</h1>
+                                        </Link>
+                                    </div>
+                                    <span className={styles.navbarCartProductPrize}>${product.prize}</span>
+                                    <div className={styles.navbarCartProductRemoveContainer}>
+                                        <span onClick={() => removeProductFromCart(product.id)} className={styles.navbarCartProductRemove + ' material-icons'}>delete</span>
+                                    </div>
+                                </li>)
+                            })}
+                        </ul>
+                        <div className={styles.navbarCartTotalContainer}>
+                            <p>Total</p>
+                            <p>${products.items.reduce((sum, prod) => sum + (prod.quantity * prod.prize), 0)}</p>
+                        </div>
+                        <Link href="/Checkout">
+                            <button className={styles.navbarCheckoutButton}>Checkout</button>
+                        </Link>
+                    </div>
+                    }
                 </div>
             }
         </>

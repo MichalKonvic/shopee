@@ -433,15 +433,105 @@
     color: white;
 }
 
+.navBarMobileCartContainer {
+    width: 100%;
+    padding-top: 1rem;
+}
+
+.navbarMobileCartList {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbarMobileCartList li {
+    display: grid;
+    align-content: center;
+    margin-bottom: 1rem;
+}
+
+.navbarCartProductRemove {
+    cursor: pointer;
+    width: fit-content;
+    font-size: 2rem;
+}
+
+.navbarCartProductRemoveContainer {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.navbarCartProductRemove:hover {
+    transition: .2s;
+    color: gray;
+}
+
+.navbarCartProductHeader {
+    grid-row-start: 1;
+    display: flex;
+    font-size: 1.5rem;
+}
+
+.navbarCartTotalContainer {
+    display: flex;
+    width: 100%;
+    font-size: 1.5rem;
+    justify-content: space-between;
+}
+
+.navbarCartProductHeader p {
+    color: rgb(189, 189, 189);
+    margin-right: .25rem;
+}
+
+.navbarCartProductHeader h1:hover {
+    text-decoration: underline;
+}
+
+.navbarCheckoutButton {
+    width: 100%;
+    background-color: rgb(90, 213, 88);
+    border: none;
+    margin-top: 1rem;
+    border-radius: 8px;
+    padding: 1rem 0rem;
+    color: white;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.navbarCheckoutButton:hover {
+    transition: .3s;
+    background-color: rgb(67, 225, 64);
+}
+
+.navbarCartProductPrize {
+    color: rgb(189, 189, 189);
+    font-size: 1.25rem;
+}
+
+.navbarCartProductHeader h1 {
+    font-weight: 600;
+}
+
+
+.navBarCartTitle {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
 .divider {
     width: 100%;
-    padding-bottom: .5rem;
+    padding-top: .5rem;
     border-bottom: 1px solid gray;
 }
 
 .navbarMenuBarList {
     width: 100%;
-    margin-top: 1rem;
 }
 
 .navbarMenuBarList li {
