@@ -10,7 +10,16 @@ const useShopping = () => {
     const [locStorageData,setLocStorage] = useLocalStorage('SHOPEE-SHOPPING_CART', {
             items: []
         } as { items: productI[] });
-    const [products, setProducts] = useState<{items:productI[]}>({items:[]});
+    const [products, setProducts] = useState<{ items: productI[] }>({ items: [] });
+    
+    const removeProduct = (productId: string) => {
+        setProducts((prev) => {
+            return {
+                items:prev.items.filter(prod => prod.id !== productId)
+            }
+        })
+    } 
+
     const addProduct = (product: productI) => {
         //TODO check if product is inStock before adding another into quantity
         if (products.items.some(prod => prod.id === product.id)) {
@@ -41,7 +50,7 @@ const useShopping = () => {
         setLocStorage({items:products.items});
     }, [products,setLocStorage]);
     
-    return {addProduct,products}
+    return {addProduct,products,removeProduct}
 }
 export default useShopping;
 export type {productI};

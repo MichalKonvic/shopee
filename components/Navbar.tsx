@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import ShoppingCartContext from '../contexts/ShoppingCartContext'
 const Navbar = () => {
     const router = useRouter();
-    const { products } = useContext(ShoppingCartContext);
+    const { products, removeProduct } = useContext(ShoppingCartContext);
     const { isLoggedIn, user, logout } = useContext(AuthContext);
     const [isMenuOpen, openMenu] = useState(false);
     const [isProfileOpen, toggleProfileMenu] = useState(false);
@@ -30,10 +30,10 @@ const Navbar = () => {
     }, [])
 
 
+
     const onClickOutside = () => {
         toggleProfileMenu(false);
     }
-
     useEffect(() => {
         if (isProfileOpen) {
             const handleClickOutside = (event: any) => {
@@ -47,12 +47,6 @@ const Navbar = () => {
             }
         }
     }, [onClickOutside]);
-    const toggleCart = () => {
-
-    }
-    const removeProductFromCart = (prodId: string) => {
-        // TODO handle product remove
-    }
     return (
         <>
             <div className={styles.navbar}>
@@ -156,7 +150,7 @@ const Navbar = () => {
                                     </div>
                                     <span className={styles.navbarCartProductPrize}>${product.prize}</span>
                                     <div className={styles.navbarCartProductRemoveContainer}>
-                                        <span onClick={() => removeProductFromCart(product.id)} className={styles.navbarCartProductRemove + ' material-icons'}>delete</span>
+                                        <span onClick={() => removeProduct(product.id)} className={styles.navbarCartProductRemove + ' material-icons'}>delete</span>
                                     </div>
                                 </li>)
                             })}
