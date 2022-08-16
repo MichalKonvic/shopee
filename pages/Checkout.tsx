@@ -19,6 +19,10 @@ const Checkout = () => {
                 <div className={styles.cartTable}>
                     {products.items.length === 0 ? <EmptyCart /> : <>
                         <ProductsList />
+                        <div className={styles.productManagerTotalContainer}>
+                            <p>Total:</p>
+                            <span>${products.items.reduce((sum, prod) => sum + (prod.quantity * prod.prize), 0)}</span>
+                        </div>
                         <button className={styles.cartBuyButton}>Order now</button>
                     </>}
                 </div>

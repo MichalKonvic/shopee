@@ -85,7 +85,10 @@ const ProductManager = ({ productData }: { productData: productI }) => {
     }
     return (
         isLoading ? <ProductLoading /> : <div className={styles.ProductManagerContainer}>
-            <input className={styles.productManagerInput} type="number" value={productData.quantity} onChange={handleQuantityChange} name="quantity" id="quantity" />
+            <div className={styles.productManagerInputContainer}>
+                <input className={styles.productManagerInput} type="number" value={productData.quantity} onChange={handleQuantityChange} name="quantity" id="quantity" />
+                <p className={styles.productManagerPrizeTag}>x <span>${productData.prize}</span></p>
+            </div>
             <Link href={`/product/${productData.id}`}>
                 <p className={styles.productManagerTitle}>{productData.title}</p>
             </Link>

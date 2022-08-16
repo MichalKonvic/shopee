@@ -132,6 +132,25 @@
     cursor: pointer;
 }
 
+.productManagerInputContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .25rem;
+    font-size: 1.5rem;
+}
+
+.productManagerTotalContainer {
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font-size: 2rem;
+}
+
+.productManagerPrizeTag {
+    color: rgb(195, 195, 195);
+}
+
 .linkButton:hover {
     transition: .3s;
     color: rgb(69, 127, 214);
