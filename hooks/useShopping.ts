@@ -20,6 +20,18 @@ const useShopping = () => {
         })
     } 
 
+    const updateProduct = (product: productI) => {
+        const productIndex = products.items.findIndex(prod => prod.id === product.id);
+        if (productIndex === -1) {
+            console.error("Cannot update product(product not found)")
+            return; // Not found
+        }
+        setProducts((prev) => {
+            prev.items[productIndex] = product;
+            return {items:[...prev.items]};
+        })
+    }
+
     const addProduct = (product: productI) => {
         //TODO check if product is inStock before adding another into quantity
         if (products.items.some(prod => prod.id === product.id)) {
@@ -50,7 +62,7 @@ const useShopping = () => {
         setLocStorage({items:products.items});
     }, [products,setLocStorage]);
     
-    return {addProduct,products,removeProduct}
+    return {addProduct,products,removeProduct, updateProduct}
 }
 export default useShopping;
 export type {productI};

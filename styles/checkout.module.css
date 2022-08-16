@@ -1,0 +1,148 @@
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: gray;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 0rem 1rem;
+    margin-bottom: 5rem;
+}
+
+.checkoutTitle {
+    color: white;
+    padding-top: 2.5rem;
+    font-size: 3.5rem;
+    font-weight: 800;
+}
+
+.cartCountText {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.cartTable {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid gray;
+    width: 100%;
+    max-width: 500px;
+    margin-top: 1rem;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.cartBuyButton {
+    margin-top: 1rem;
+    cursor: pointer;
+    background-color: rgb(30, 232, 114);
+    color: white;
+    font-size: 1.5rem;
+    padding: 1rem 0rem;
+    border: none;
+    border-radius: 8px;
+}
+
+.cartBuyButton:hover {
+    transition: .3s;
+    box-shadow: rgba(30,
+            232,
+            104, 0.56) 0px 22px 70px 4px;
+    background-color: rgb(30, 232, 104);
+}
+
+.ProductManagerContainer {
+    display: flex;
+    font-size: 2rem;
+    color: white;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid gray;
+    padding-bottom: 1rem;
+    overflow: hidden;
+}
+
+.productManagerLoading {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.productManagerTitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.productManagerDelete {
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.productManagerDelete:hover {
+    transition: .2s;
+    color: rgb(168, 168, 168);
+}
+
+.productManagerTitle:hover {
+    text-decoration: underline;
+}
+
+.productManagerInput {
+    width: 100px;
+    height: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+    outline: none;
+    color: white;
+
+    background-color: transparent;
+    border-radius: 8px;
+}
+
+.spinner {
+    border-right: 5px solid gray;
+    border-bottom: 5px solid gray;
+    border-left: 5px solid transparent;
+    border-top: 5px solid transparent;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: rotate 1s infinite;
+}
+
+.emptyTitle {
+    color: white;
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.linkButton {
+    color: white;
+    text-decoration: underline;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.linkButton:hover {
+    transition: .3s;
+    color: rgb(69, 127, 214);
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg)
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

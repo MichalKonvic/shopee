@@ -7,6 +7,7 @@ const products: {items:productI[]} = {
 
 export default createContext({
     addProduct: (product: productI) => { },
-    removeProduct: (productId: string) => {},
+    removeProduct: (productId: string) => { },
+    updateProduct: (product: productI) => { },
     products
 })
