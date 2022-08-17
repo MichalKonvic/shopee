@@ -4,8 +4,12 @@ import ProductsList from '../components/productsManager/productsList';
 import styles from '../styles/checkout.module.css'
 import Head from 'next/head'
 import EmptyCart from '../components/productsManager/EmptyCart';
+import AdressForm from '../components/AdressForm';
 const Checkout = () => {
     const { products, addProduct, removeProduct } = useContext(ShoppingCartContext);
+    const handleOrder = () => {
+
+    }
     return (
         <>
             <Head>
@@ -18,12 +22,14 @@ const Checkout = () => {
                 </p>
                 <div className={styles.cartTable}>
                     {products.items.length === 0 ? <EmptyCart /> : <>
+                        <AdressForm />
+                        <span className={styles.divider}></span>
                         <ProductsList />
                         <div className={styles.productManagerTotalContainer}>
                             <p>Total:</p>
                             <span>${products.items.reduce((sum, prod) => sum + (prod.quantity * prod.prize), 0)}</span>
                         </div>
-                        <button className={styles.cartBuyButton}>Order now</button>
+                        <button className={styles.cartBuyButton} onClick={handleOrder}>Order now</button>
                     </>}
                 </div>
             </div>

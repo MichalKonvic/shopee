@@ -156,6 +156,32 @@
     color: rgb(69, 127, 214);
 }
 
+.adressForm {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    font-size: 1.5rem;
+    gap: .5rem;
+    color: white;
+    margin-bottom: .5rem;
+}
+
+.adressForm input {
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 8px;
+    border: 1px solid gray;
+    background-color: transparent;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+}
+
+.adressForm label {
+    font-weight: 200;
+}
+
 @keyframes rotate {
     from {
         transform: rotate(0deg)
