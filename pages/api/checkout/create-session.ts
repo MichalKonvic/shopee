@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const user = isAccessTokenValid(accessToken);
     const orderModelData:OrderI = {
         ...(user && { author: user.userId }),
-        state: "PAYMENT_REQUIRED",
+        state: "GENERATED",
         items: [],
         total: items.reduce((prevValue, item) => prevValue + (item.prize * item.quantity), 0),
         sessionId: "SESSION_ID"
@@ -79,10 +79,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(500).send("Checkout error");
         return;
     }
+    const handleCheckoutPaid = async () => {
+        try {
+            await Order.findByIdAndUpdate(orderId, { state: "PAID" });
+            return;
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+    }
     try {
-        const orderQuery:OrderI = await Order.findByIdAndUpdate(orderId,{sessionId:checkoutSession.id});
+        const orderQuery:OrderI = await Order.findByIdAndUpdate(orderId,{sessionId:checkoutSession.id,state:"PAYMENT_REQUIRED"});
         res.status(200).json({ url: checkoutSession.url });
-        return;
+        const expiratesAt = new Date(new Date().setMinutes(new Date().getMinutes() + 32)).getTime();
+        const checkPaymentInterval = setInterval(async() => {
+            if (expiratesAt - new Date().getTime() < 0) {
+                // TODO handle expired checkout ...
+                // ... Delete order and add products back to stock ...
+                // ... Maybe use function
+                clearInterval(checkPaymentInterval);
+            }
+            const sessionCheckout = await stripe.checkout.sessions.retrieve(checkoutSession.id);
+            if (sessionCheckout.payment_status === "paid") {
+                handleCheckoutPaid()
+                clearInterval(checkPaymentInterval);
+            };
+        },60 * 1000);
     } catch (error) {
         console.log(error)
         res.status(500).send("Server error");
