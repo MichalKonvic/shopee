@@ -6,12 +6,23 @@ interface productI{
     prize: number;
     quantity: number;
 }
+type orderStateT = "IDLE"|"PROCESSING"|"COMPLETED"|"FAILED"
 const useShopping = () => {
     const [locStorageData,setLocStorage] = useLocalStorage('SHOPEE-SHOPPING_CART', {
             items: []
-        } as { items: productI[] });
+    } as { items: productI[] });
+    const [shippingInfo, setShipping] = useState({
+        address: "",
+        note: ""
+    })
+    const [orderState, setOrderState] = useState<orderStateT>("IDLE");
     const [products, setProducts] = useState<{ items: productI[] }>({ items: [] });
     
+    const processOrder = () => {
+        setOrderState("PROCESSING");
+
+    }
+
     const removeProduct = (productId: string) => {
         setProducts((prev) => {
             return {
@@ -62,7 +73,7 @@ const useShopping = () => {
         setLocStorage({items:products.items});
     }, [products,setLocStorage]);
     
-    return {addProduct,products,removeProduct, updateProduct}
+    return {addProduct,removeProduct, updateProduct,setShipping,processOrder,orderState,shippingInfo,products}
 }
 export default useShopping;
-export type {productI};
+export type {productI, orderStateT};

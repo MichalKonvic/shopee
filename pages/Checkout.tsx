@@ -5,6 +5,7 @@ import styles from '../styles/checkout.module.css'
 import Head from 'next/head'
 import EmptyCart from '../components/productsManager/EmptyCart';
 import AdressForm from '../components/AdressForm';
+import ProcessOrder from '../components/ProcessOrder';
 const Checkout = () => {
     const { products, addProduct, removeProduct } = useContext(ShoppingCartContext);
     const handleOrder = () => {
@@ -15,6 +16,7 @@ const Checkout = () => {
             <Head>
                 <title>Shopee - Checkout</title>
             </Head>
+            <ProcessOrder />
             <div className={styles.container + ' navbarFix'}>
                 <h1 className={styles.checkoutTitle}>Checkout</h1>
                 <p className={styles.cartCountText}>
