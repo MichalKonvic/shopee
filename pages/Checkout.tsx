@@ -7,9 +7,9 @@ import EmptyCart from '../components/productsManager/EmptyCart';
 import AdressForm from '../components/AdressForm';
 import ProcessOrder from '../components/ProcessOrder';
 const Checkout = () => {
-    const { products, addProduct, removeProduct } = useContext(ShoppingCartContext);
+    const { products, processOrder } = useContext(ShoppingCartContext);
     const handleOrder = () => {
-
+        processOrder();
     }
     return (
         <>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocalStorage } from '../hooks/useStorages';
 interface productI{
     id: string;
@@ -8,6 +8,7 @@ interface productI{
 }
 type orderStateT = "IDLE"|"PROCESSING"|"COMPLETED"|"FAILED"
 const useShopping = () => {
+    const mounted = useRef(false);
     const [locStorageData,setLocStorage] = useLocalStorage('SHOPEE-SHOPPING_CART', {
             items: []
     } as { items: productI[] });
@@ -18,9 +19,16 @@ const useShopping = () => {
     const [orderState, setOrderState] = useState<orderStateT>("IDLE");
     const [products, setProducts] = useState<{ items: productI[] }>({ items: [] });
     
-    const processOrder = () => {
+    const processOrder = async () => {
         setOrderState("PROCESSING");
-
+        const requestBody = { items: products.items };
+        const sessionId = fetch("/api/checkout/create-session", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        });
     }
 
     const removeProduct = (productId: string) => {
@@ -44,7 +52,6 @@ const useShopping = () => {
     }
 
     const addProduct = (product: productI) => {
-        //TODO check if product is inStock before adding another into quantity
         if (products.items.some(prod => prod.id === product.id)) {
             const updatedProducts = products.items;
             const cartProductIndex = updatedProducts.findIndex(prod => prod.id === product.id);
@@ -56,6 +63,14 @@ const useShopping = () => {
             items: [...products.items, product]
         })
     } 
+    // Mount/Unmount handler
+    useEffect(() => {
+        mounted.current = true;
+        return () => {
+            mounted.current = false;
+        }
+    }, []);
+
     useEffect(() => {
         // Prevents reloading data
         if (locStorageData.items.length == 0) return;
