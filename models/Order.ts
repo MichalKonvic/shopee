@@ -5,6 +5,7 @@ interface OrderI {
     _id?: string;
     author?: string;
     state?: string;
+    sessionId?: string;
     total?: number;
     items?: {
         id: string,
@@ -47,7 +48,17 @@ const OrderSchema = new mongoose.Schema({
         immutable: true,
         required: true,
         default: () => Date(),
-    }
+    },
+    sessionId: {
+        type: String,
+        required: true,
+    },
+    sessionExpirationAt: {
+        type: Date,
+        immutable: true,
+        required: true,
+        default: () => new Date(new Date().setMinutes(new Date().getMinutes() + 35))
+    } 
 });
 export type { OrderI }
 export default mongoose.models.Order || mongoose.model('Order', OrderSchema)

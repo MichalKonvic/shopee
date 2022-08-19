@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useState, useEffect, useRef } from 'react';
 import { useLocalStorage } from '../hooks/useStorages';
 interface productI{
@@ -28,6 +29,15 @@ const useShopping = () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(requestBody)
+        }).then((res) => {
+            if (res.ok) return res.json();
+            return res.json().then(json => Promise.reject(json));
+        }).then(({ url }) => {
+            if (!mounted.current) return;
+            window.location = url;
+        }).catch(e => {
+            if (!mounted.current) return;
+            //TODO handle error
         });
     }
 

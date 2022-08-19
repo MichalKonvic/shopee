@@ -3,10 +3,8 @@ import dbConnect from '../../../lib/dbConnect';
 import Product, { ProductI } from '../../../models/Product';
 import { productI } from '../../../hooks/useShopping';
 import { isAccessTokenValid } from '../../../lib/jwt';
-import { UserI } from '../../../models/User';
-import Order from '../../../models/Order';
-import getStripe from '../../../lib/get-stripejs';
-import { Stripe } from '@stripe/stripe-js';
+import Order, { OrderI } from '../../../models/Order';
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY as string);
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { method } = req;
     if (method !== "POST") {
@@ -15,12 +13,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await dbConnect();
     const { items, accessToken }: { items: productI[], accessToken: string } = req.body;
     const user = isAccessTokenValid(accessToken);
-    // TODO add expiration date
-    const orderModelData:UserI = {
+    const orderModelData:OrderI = {
         ...(user && { author: user.userId }),
         state: "PAYMENT_REQUIRED",
         items: [],
-        total: items.reduce((prevValue, item) => prevValue + (item.prize * item.quantity), 0)
+        total: items.reduce((prevValue, item) => prevValue + (item.prize * item.quantity), 0),
+        sessionId: "SESSION_ID"
     }
     // Check if all products are inStock
     for (const item of items) {
@@ -53,10 +51,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } catch (error) {
         res.status(500).send("Server error");
     }
-    const stripe = await getStripe();
-    // TODO add expiration date
-    const params: Stripe.Checkout.SessionCreateParams = {
-    submit_type: 'Pay',
+    const params= {
+    submit_type: 'pay',
         line_items: items.map(item => {
             return {
                 price_data: {
@@ -70,14 +66,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     }),
     success_url: `${process.env.SERVER_URL}/order?order_id=${orderId}`,
-    cancel_url: `${process.env.SERVER_URL}/order?order_id=${orderId}`,
+        cancel_url: `${process.env.SERVER_URL}/order?order_id=${orderId}`,
+        mode: "payment",
+        expires_at: Math.floor(new Date(new Date().setMinutes(new Date().getMinutes() + 31)).getTime() / 1000)
     };
+    let checkoutSession:Stripe.Checkout.Session|null = null;
     try {
-        const checkoutSession: Stripe.Checkout.Session =
+        checkoutSession =
             await stripe.checkout.sessions.create(params);
+        orderModelData.sessionId = checkoutSession.id;
+    } catch (error) {
+        res.status(500).send("Checkout error");
+        return;
+    }
+    try {
+        const orderQuery:OrderI = await Order.findByIdAndUpdate(orderId,{sessionId:checkoutSession.id});
         res.status(200).json({ url: checkoutSession.url });
         return;
     } catch (error) {
-        res.status(500).send("Checkout error");
+        console.log(error)
+        res.status(500).send("Server error");
+        return;
     }
 }
