@@ -88,15 +88,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return;
         }
     }
+    const handleCheckoutExpiration = async () => {
+        try {
+            const orderQuery: OrderI = await Order.findByIdAndDelete(orderId);
+            const orderItems = orderQuery.items;
+            for (const orderItem of orderItems) {
+                try {
+                    const productQuery = await Product.findById(orderItem.id);
+                    productQuery.inStock += orderItem.quantity;
+                    await productQuery.save()
+                } catch (error) {
+                    console.error(error);
+                    continue;
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+    }
     try {
         const orderQuery:OrderI = await Order.findByIdAndUpdate(orderId,{sessionId:checkoutSession.id,state:"PAYMENT_REQUIRED"});
         res.status(200).json({ url: checkoutSession.url });
         const expiratesAt = new Date(new Date().setMinutes(new Date().getMinutes() + 32)).getTime();
         const checkPaymentInterval = setInterval(async() => {
             if (expiratesAt - new Date().getTime() < 0) {
-                // TODO handle expired checkout ...
-                // ... Delete order and add products back to stock ...
-                // ... Maybe use function
+                handleCheckoutExpiration();
                 clearInterval(checkPaymentInterval);
             }
             const sessionCheckout = await stripe.checkout.sessions.retrieve(checkoutSession.id);
