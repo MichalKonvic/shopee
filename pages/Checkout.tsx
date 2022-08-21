@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import ShoppingCartContext from '../contexts/ShoppingCartContext'
 import ProductsList from '../components/productsManager/productsList';
 import styles from '../styles/checkout.module.css'
@@ -6,8 +6,20 @@ import Head from 'next/head'
 import EmptyCart from '../components/productsManager/EmptyCart';
 import AdressForm from '../components/AdressForm';
 import ProcessOrder from '../components/ProcessOrder';
+import { ModalContext } from '../contexts/ModalContext';
 const Checkout = () => {
-    const { products, processOrder } = useContext(ShoppingCartContext);
+    const { products, processOrder, orderState } = useContext(ShoppingCartContext);
+    const { addMessage } = useContext(ModalContext);
+    useEffect(() => {
+        // @ts-ignore
+        if (orderState !== "FAILED") return;
+        addMessage({
+            title: "Error",
+            message: "Cannot process order",
+            type: "ERR",
+            hideAfter: 3500
+        });
+    }, [orderState]);
     const handleOrder = () => {
         processOrder();
     }

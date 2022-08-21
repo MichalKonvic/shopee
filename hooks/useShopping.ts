@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { ModalContext } from '../contexts/ModalContext';
 import { useLocalStorage, useSessionStorage } from '../hooks/useStorages';
 interface productI{
     id: string;
