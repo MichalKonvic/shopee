@@ -34,6 +34,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(200).json({
             id: orderData.id,
             state: orderData.state,
+            address: orderData.address,
+            note: orderData.note,
             items: orderData.items,
             total: orderData.total,
             sessionId: orderData.sessionId,
