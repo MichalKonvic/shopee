@@ -4,6 +4,8 @@ import './User';
 interface OrderI {
     _id?: string;
     author?: string;
+    address?: string;
+    note?: string;
     state?: string;
     sessionId?: string;
     total?: number;
@@ -18,6 +20,13 @@ const OrderSchema = new mongoose.Schema({
     author: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'User'
+    },
+    address: {
+        type: String,
+        required: true
+    },
+    note: {
+        type: String
     },
     state: {
         type: String,

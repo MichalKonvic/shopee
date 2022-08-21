@@ -1,18 +1,22 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect, useRef } from 'react';
-import { useLocalStorage } from '../hooks/useStorages';
+import { useLocalStorage, useSessionStorage } from '../hooks/useStorages';
 interface productI{
     id: string;
     title: string;
     prize: number;
     quantity: number;
 }
-type orderStateT = "IDLE"|"PROCESSING"|"COMPLETED"|"FAILED"
+type orderStateT = "IDLE" | "PROCESSING" | "COMPLETED" | "FAILED"
 const useShopping = () => {
     const mounted = useRef(false);
     const [locStorageData,setLocStorage] = useLocalStorage('SHOPEE-SHOPPING_CART', {
-            items: []
+        items: [],
     } as { items: productI[] });
+    const [orderStorageData, setOrderStorage] = useLocalStorage('SHOPEE-ORDER-DATA', {
+        sessionId: "",
+        orderId: ""
+    })
     const [shippingInfo, setShipping] = useState({
         address: "",
         note: ""
@@ -21,9 +25,14 @@ const useShopping = () => {
     const [products, setProducts] = useState<{ items: productI[] }>({ items: [] });
     
     const processOrder = async () => {
+        if (orderState === "PROCESSING") return;
         setOrderState("PROCESSING");
-        const requestBody = { items: products.items };
-        const sessionId = fetch("/api/checkout/create-session", {
+        const requestBody = {
+            items: products.items,
+            address: shippingInfo.address,
+            note: shippingInfo.note
+        };
+        fetch("/api/checkout/create-session", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -32,12 +41,16 @@ const useShopping = () => {
         }).then((res) => {
             if (res.ok) return res.json();
             return res.json().then(json => Promise.reject(json));
-        }).then(({ url }) => {
+        }).then(({ url,sessionId, orderId }) => {
             if (!mounted.current) return;
+            setOrderStorage({
+                sessionId,
+                orderId
+            })
             window.location = url;
         }).catch(e => {
             if (!mounted.current) return;
-            //TODO handle error
+            setOrderState("FAILED");
         });
     }
 
@@ -93,6 +106,44 @@ const useShopping = () => {
         if (locStorageData.items.length == 0) return;
         setProducts({items:locStorageProducts});
     }, []);
+
+    // Cleans shopping cart
+    useEffect(() => {
+        if (orderState !== "COMPLETED") return;
+        setOrderStorage({ orderId: "", sessionId: "" });
+        setProducts({
+            items: []
+        });
+        setShipping({
+            address: "",
+            note: ""
+        })
+        setOrderState("IDLE");
+    }, [orderState]);
+
+    useEffect(() => {
+        if (!orderStorageData.orderId) return;
+        const controller = new AbortController();
+        const signal = controller.signal;
+        fetch(`/api/checkout/check-session-state?orderId=${orderStorageData.orderId}`, {
+            method: 'GET',
+            signal
+        }).then(res => {
+            if (res.ok) return res.json();
+            Promise.reject(res);
+        }).then(({state}) => {
+            if (state === "PAYMENT_REQUIRED") return;
+            if (state === "PAID") {
+                setOrderState("COMPLETED");
+                return;
+            }
+            setOrderState("FAILED");
+        }).catch(err => {
+            if (err.name === "AbortError") return;
+            console.log(err);
+            // TODO handle error 
+        })
+    },[orderStorageData]);
 
     useEffect(() => {
         setLocStorage({items:products.items});

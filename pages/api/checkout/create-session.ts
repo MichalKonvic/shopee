@@ -11,10 +11,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(400).send("Invalid method");
     }
     await dbConnect();
-    const { items, accessToken }: { items: productI[], accessToken: string } = req.body;
+    const { items, accessToken, address, note }: { items: productI[], accessToken: string, address:string, note:string } = req.body;
+    if (!address) {
+        res.status(400).send("Missing address");
+        return;
+    }
     const user = isAccessTokenValid(accessToken);
     const orderModelData:OrderI = {
         ...(user && { author: user.userId }),
+        address,
+        ...(note && { note }),
         state: "GENERATED",
         items: [],
         total: items.reduce((prevValue, item) => prevValue + (item.prize * item.quantity), 0),
@@ -109,7 +115,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     try {
         const orderQuery:OrderI = await Order.findByIdAndUpdate(orderId,{sessionId:checkoutSession.id,state:"PAYMENT_REQUIRED"});
-        res.status(200).json({ url: checkoutSession.url });
+        res.status(200).json({ url: checkoutSession.url,sessionId:checkoutSession.id, orderId });
         const expiratesAt = new Date(new Date().setMinutes(new Date().getMinutes() + 32)).getTime();
         const checkPaymentInterval = setInterval(async() => {
             if (expiratesAt - new Date().getTime() < 0) {
