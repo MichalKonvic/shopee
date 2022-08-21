@@ -42,8 +42,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
         return;
     } catch (error) {
-        console.log(error)
-        res.status(500).send("Server Error");
+        console.log(error);
+        res.status(404).send("Server Error");
         return;
     }
 }

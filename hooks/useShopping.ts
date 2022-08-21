@@ -76,6 +76,9 @@ const useShopping = () => {
     }
 
     const addProduct = (product: productI) => {
+        if (orderState === "COMPLETED") {
+            setOrderState("IDLE");
+        }
         if (products.items.some(prod => prod.id === product.id)) {
             const updatedProducts = products.items;
             const cartProductIndex = updatedProducts.findIndex(prod => prod.id === product.id);
@@ -110,8 +113,11 @@ const useShopping = () => {
 
     // Cleans shopping cart
     useEffect(() => {
+        if (orderState === "FAILED") {
+            setOrderStorage({ orderId: "", sessionId: "" });
+            return;
+        }
         if (orderState !== "COMPLETED") return;
-        setOrderStorage({ orderId: "", sessionId: "" });
         setProducts({
             items: []
         });
@@ -119,7 +125,7 @@ const useShopping = () => {
             address: "",
             note: ""
         })
-        setOrderState("IDLE");
+        setOrderStorage({ orderId: "", sessionId: "" });
     }, [orderState]);
 
     useEffect(() => {
@@ -133,7 +139,10 @@ const useShopping = () => {
             if (res.ok) return res.json();
             Promise.reject(res);
         }).then(({state}) => {
-            if (state === "PAYMENT_REQUIRED") return;
+            if (state === "PAYMENT_REQUIRED") {
+                setOrderState("PROCESSING");
+                return;
+            }
             if (state === "PAID") {
                 setOrderState("COMPLETED");
                 return;
@@ -141,8 +150,8 @@ const useShopping = () => {
             setOrderState("FAILED");
         }).catch(err => {
             if (err.name === "AbortError") return;
+            setOrderState("FAILED");
             console.log(err);
-            // TODO handle error 
         })
     },[orderStorageData]);
 
