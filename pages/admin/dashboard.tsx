@@ -1,17 +1,24 @@
-import DashboardNavbar from "../../components/DashboardNavbar"
+import { useState } from "react"
+import DashNavigation from "../../components/adminDashboard/DashNavigation"
+import OrdersDashboard from "../../components/adminDashboard/OrdersDashboard"
+import ProductsDashboard from "../../components/adminDashboard/ProductsDashboard"
+import UsersDashboard from "../../components/adminDashboard/UsersDashboard"
 import PrivateRoute from "../../components/PrivateRoute"
 import styles from '../../styles/AdminDashboard.module.css'
-const dashboard = () => {
+const Dashboard = () => {
+    const [activeTab, setTab] = useState<"ORDERS" | "PRODUCTS" | "USERS">("PRODUCTS");
     return (
-        <PrivateRoute adminOnly={false} redirect="/">
-            <div className={styles.container}>
-                <DashboardNavbar />
+        <PrivateRoute adminOnly={true} redirect="/">
+            <div className={styles.container + " navbarFix"}>
+                <DashNavigation activeTab={activeTab} activateTab={setTab} />
                 <main>
-
+                    {activeTab === "ORDERS" && <OrdersDashboard />}
+                    {activeTab === "PRODUCTS" && <ProductsDashboard />}
+                    {activeTab === "USERS" && <UsersDashboard />}
                 </main>
             </div>
         </PrivateRoute>
     )
 }
 
-export default dashboard
+export default Dashboard;

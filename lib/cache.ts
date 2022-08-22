@@ -16,4 +16,4 @@ function cacheHook<T>(intialValue:T,key:string):cacheHookI<T> {
 }
 
 export default cacheHook;
-export type {cacheHookI,SetStateAction}
+export type { cacheHookI, SetStateAction }
