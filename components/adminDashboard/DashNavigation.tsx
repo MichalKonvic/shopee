@@ -5,9 +5,9 @@ const DashNavigation = ({ activeTab, activateTab }) => {
         <div className={styles.DashNavigation}>
             <h1 className={styles.DashTitle}>Manage</h1>
             <ul className={styles.navigationList}>
-                <li onClick={() => activateTab("PRODUCTS")} className={activeTab === "PRODUCTS" && styles.activeTab}>Products</li>
-                <li onClick={() => activateTab("USERS")} className={activeTab === "USERS" && styles.activeTab}>Users</li>
-                <li onClick={() => activateTab("ORDERS")} className={activeTab === "ORDERS" && styles.activeTab}>Orders</li>
+                <li onClick={() => activateTab("PRODUCTS")} className={activeTab === "PRODUCTS" ? styles.activeTab: ""}>Products</li>
+                <li onClick={() => activateTab("USERS")} className={activeTab === "USERS" ? styles.activeTab: ""}>Users</li>
+                <li onClick={() => activateTab("ORDERS")} className={activeTab === "ORDERS" ? styles.activeTab: ""}>Orders</li>
             </ul>
         </div>
     )

@@ -11,7 +11,7 @@ const Dashboard = () => {
         <PrivateRoute adminOnly={true} redirect="/">
             <div className={styles.container + " navbarFix"}>
                 <DashNavigation activeTab={activeTab} activateTab={setTab} />
-                <main>
+                <main style={{width:"100%"}}>
                     {activeTab === "ORDERS" && <OrdersDashboard />}
                     {activeTab === "PRODUCTS" && <ProductsDashboard />}
                     {activeTab === "USERS" && <UsersDashboard />}
