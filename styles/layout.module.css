@@ -233,12 +233,6 @@
     font-size: 1.2rem;
 }
 
-.footerLogo {
-    width: 16rem;
-    margin-top: -6rem;
-    margin-bottom: -4rem;
-}
-
 .footerLogoContainer {
     width: 100%;
     display: flex;
