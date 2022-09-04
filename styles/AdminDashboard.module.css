@@ -1,6 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
+    margin-bottom: 5rem;
 }
 
 .DashNavigation {
@@ -87,6 +88,20 @@
     font-size: 1.5rem;
     color: rgb(202, 202, 202);
     font-weight: 800;
+}
+.productAddButton{
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    margin: 1rem 1rem;
+    border: 1px solid rgb(49, 120, 219);
+}
+.productAddButton:hover{
+    background-color: rgb(49, 120, 219);
+    transition: .3s;
 }
 
 @media only screen and (min-width: 800px) {

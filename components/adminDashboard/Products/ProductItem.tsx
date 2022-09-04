@@ -5,7 +5,7 @@ import { ProductI } from '../../../models/Product'
 import styles from '../../../styles/AdminDashboard.module.css'
 import { ModalContext } from '../../../contexts/ModalContext';
 import { useRouter } from 'next/router';
-const ProductItem = ({ product }): { product: ProductI } => {
+const ProductItem = ({ product }: { product: ProductI }) => {
     const isMountedRef = useMounted();
     const router = useRouter();
     const { accessToken } = useContext(AuthContext);
@@ -47,7 +47,6 @@ const ProductItem = ({ product }): { product: ProductI } => {
                 <p>{product.inStock}</p>
             </div>
             <div className={styles.productItemRightButtons}>
-                <span className='material-icons'>edit</span>
                 <span className='material-icons' onClick={() => deleteItem(product._id)}>delete</span>
             </div>
         </div>

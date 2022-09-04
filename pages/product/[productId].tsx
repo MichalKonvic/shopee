@@ -101,7 +101,6 @@ const Product = () => {
     return (
         <div className={styles.productContainer + " navbarFix"}>
             <h1 className={styles.productTitle}>{product.name}</h1>
-            {user.isAdmin && <button className={styles.editButton}>Edit Product</button>}
             <div className={styles.productImageContainer}>
                 {/* eslint-disable-next-line @next/next/no-img-element*/}
                 <img src={product.img} alt={product.name} />
@@ -116,9 +115,7 @@ const Product = () => {
                     {product.inStock == 0 ? <span className={styles.prizeOutOfStock}>Out of Stock</span> :
                         <span>${product.prize}</span>}
                 </div>
-                {product.inStock == 0 ? <button>Request</button>
-                    :
-                    <button onClick={handleProductBuy}>Buy now</button>}
+                {product.inStock != 0 &&<button onClick={handleProductBuy}>Buy now</button>}
             </div>
         </div>
     )

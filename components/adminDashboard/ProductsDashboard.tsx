@@ -2,6 +2,7 @@ import React, { useContext, useEffect,useState } from 'react'
 import styles from '../../styles/AdminDashboard.module.css';
 import { ModalContext } from '../../contexts/ModalContext';
 import ProductItem from './Products/ProductItem';
+import Link from 'next/link';
 const ProductsDashboard = () => {
     const [products, setProducts] = useState([]);
     const { addMessage} = useContext(ModalContext);
@@ -27,6 +28,9 @@ const ProductsDashboard = () => {
             <div className={styles.productsList}>
                 {products.map(product => <ProductItem product={product} />)}
             </div>
+            <Link href="/admin/products/add">
+                <button className={styles.productAddButton}>Add Product</button>
+            </Link>
         </div>
     )
 }
