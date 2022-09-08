@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../lib/dbConnect";
 import { isAccessTokenValid } from "../../../lib/jwt";
-import Product, { ProductI } from "../../../models/Product";
+import User from "../../../models/User";
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
@@ -29,7 +29,7 @@ export default async function handler(
 	}
 	await dbConnect();
 	try {
-		await Product.deleteOne({ _id: id });
+		await User.deleteOne({ _id: id });
 		res.status(200).json({ success: true });
 	} catch (error) {
 		res.status(500).send("Server error");

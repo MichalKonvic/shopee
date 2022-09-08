@@ -26,7 +26,7 @@ const ProductsDashboard = () => {
         <div className={styles.productsDashboardContainer}>
             <h1 className={styles.productDashboardTitle}>Products</h1>
             <div className={styles.productsList}>
-                {products.map(product => <ProductItem product={product} />)}
+                {products?.map(product => <ProductItem product={product} />)}
             </div>
             <Link href="/admin/products/add">
                 <button className={styles.productAddButton}>Add Product</button>
