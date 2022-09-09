@@ -12,13 +12,25 @@ const Home: NextPage = () => {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    fetch("/api/products/count", {
+    fetch("/api/products/list", {
       "method": "GET",
       signal
-    }).then(res => res.json()).then(jsonRes => {
-      setProductsCount(jsonRes.data);
+    }).then(res => {
+      if (res.ok) return res.json();
+      Promise.reject(res);
+    }).then(jsonRes => {
+      setProductsCount(jsonRes.length);
     }).catch(_err => {
-      // TODO call error message component
+      if(_err.name == "AbortError") {
+        console.log("Request aborted");
+        return;
+      }
+      addMessage({
+        type: "ERR",
+        message: "Error while loading page",
+        title: "Error",
+        hideAfter: 3000
+      })
     })
     return () => {
       controller.abort();
@@ -35,7 +47,7 @@ const Home: NextPage = () => {
         <div className={styles.logoText}>
           <Image src="/textLogo.svg" alt='Shopee' width="100%" height="100%" layout="responsive" />
         </div>
-        <h2 className={styles.productCountTitle}>We are selling <p>{productCount}</p> products</h2>
+        <h2 className={styles.productCountTitle}>We are selling <p>{productCount}</p> product{productCount!=1 && "s" }</h2>
       </div>
     </>
   )

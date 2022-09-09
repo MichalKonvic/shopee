@@ -62,13 +62,8 @@ const Navbar = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link href="/products">
-                            Products
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/About">
-                            About
+                        <Link href="/RandomProduct">
+                            Random Product
                         </Link>
                     </li>
                 </ul>
@@ -92,9 +87,6 @@ const Navbar = () => {
                         <span className='material-icons'>person</span>
                         <div>
                             <p>{user.email}</p>
-                            <Link href="/profile">
-                                <button>Show Profile</button>
-                            </Link>
                         </div>
                     </div>
                     <button className={styles.navbarLogoutButton} onClick={() => logout()}>Logout</button>
@@ -111,9 +103,6 @@ const Navbar = () => {
                                 <span className='material-icons'>person</span>
                                 <div>
                                     <p>{user.email}</p>
-                                    <Link href="/profile">
-                                        <button>Show Profile</button>
-                                    </Link>
                                 </div>
                             </div>
                             <button className={styles.navbarLogoutButton} onClick={() => logout()}>Logout</button>
@@ -126,14 +115,9 @@ const Navbar = () => {
                                 Home
                             </li>
                         </Link>
-                        <Link href="/products">
+                        <Link href="/RandomProduct">
                             <li>
-                                Products
-                            </li>
-                        </Link>
-                        <Link href="/About">
-                            <li>
-                                About
+                                Random Product
                             </li>
                         </Link>
                     </ul>
