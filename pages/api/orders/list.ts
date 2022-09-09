@@ -1,36 +1,31 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../lib/dbConnect";
 import { isAccessTokenValid } from "../../../lib/jwt";
-import User from "../../../models/User";
+import Order, { OrderI } from "../../../models/Order";
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
 	const { method } = req;
 	const { authorization } = req.headers;
-	const { id } = req.query;
 	const token = authorization?.split(" ")[1];
-	if (method != "DELETE") {
+	if (method != "GET") {
 		res.status(400).send("Invalid method");
 		return;
 	}
-	const userData = isAccessTokenValid(token);
-	if (!userData) {
+	const tokenData = isAccessTokenValid(token);
+	if (!tokenData) {
 		res.status(401).send("Unauthorized");
 		return;
 	}
-	if (!userData?.isAdmin) {
+	if (!tokenData?.isAdmin) {
 		res.status(403).send("Forbidden");
-		return;
-	}
-	if (!id) {
-		res.status(400).send("Invalid id");
 		return;
 	}
 	await dbConnect();
 	try {
-		await User.deleteOne({ _id: id });
-		res.status(200).json({ success: true });
+		const queryResult: OrderI[] = await Order.find().select(`-__v`);
+		res.status(200).json(queryResult);
 	} catch (error) {
 		res.status(500).send("Server error");
 	}
